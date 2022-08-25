@@ -1,0 +1,36 @@
+server:
+  port: 8088
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/fintestifi
+    username: postgres
+    password: 12345
+    hikari:
+      maximum-pool-size: 10
+      auto-commit: true
+      connection-timeout: 20000
+      driver-class-name: org.postgresql.Driver
+  sql:
+    init:
+      mode: always
+      
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQL9Dialect
+    hibernate:
+      ddl-auto: create-drop
+
+        
+logging:
+  level:
+    org:
+      hibernate:
+        type:
+          descriptor:
+            sql: trace
+
+api-base-path: /api/v1

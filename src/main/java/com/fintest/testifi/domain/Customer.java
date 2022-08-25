@@ -2,6 +2,8 @@ package com.fintest.testifi.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 import lombok.EqualsAndHashCode;
 
@@ -14,7 +16,11 @@ import lombok.Getter;
 @EqualsAndHashCode
 @ToString
 @Entity
+@Table(name = "customers")
 public class Customer {
+	
+	@Id
+	private Long id;
 
 	@Column(nullable = false, name = "full_name")
 	private String fullName;	
