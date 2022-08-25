@@ -1,9 +1,13 @@
 package com.fintest.testifi.domain;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import lombok.EqualsAndHashCode;
 
@@ -37,6 +41,7 @@ public class Customer {
 	@Column(nullable = false, name = "home_address")
 	private String homeAddress;
 	
-	@Column(nullable = false)
-	private String age;
+	@Temporal(TemporalType.DATE)
+	@Column(nullable = false, name = "date_of_birth")
+	private Date dateofBirth;
 }
