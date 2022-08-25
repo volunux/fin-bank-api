@@ -24,39 +24,36 @@ import lombok.ToString;
 @ToString
 public class CustomerDto {
 	
-	@NotNull(message = "{customerDto.fullName.notNull}")
-	@NotBlank(message = "{customerDto.fullName.notBlank}")
-	@Size(min = 3, max = 150, message = "{customerDto.fullName.size}")
+	@NotNull(message = "{customer.fullName.notNull}")
+	@NotBlank(message = "{customer.fullName.notBlank}")
+	@Size(min = 3, max = 150, message = "{customer.fullName.size}")
 	private String fullName;
 	
-	@NotNull(message = "{customerDto.emailAddress.notNull}")
-	@NotBlank(message = "{customerDto.emailAddress.notBlank}")
-	@Email(message = "{customerDto.emailAddress.email}")
-	@Size(min = 5, max = 50, message = "{customerDto.emailAddress.size}")
+	@NotNull(message = "{customer.emailAddress.notNull}")
+	@NotBlank(message = "{customer.emailAddress.notBlank}")
+	@Email(message = "{customer.emailAddress.email}")
+	@Size(min = 5, max = 50, message = "{customer.emailAddress.size}")
 	private String emailAddress;
 	
-	@NotNull(message = "{customerDto.phoneNumber.notNull}")
-	@NotBlank(message = "{customerDto.phoneNumber.notBlank}")
-	@Size(min = 1, max = 15, message = "{customerDto.phoneNumber.size}")
+	@NotNull(message = "{customer.phoneNumber.notNull}")
+	@NotBlank(message = "{customer.phoneNumber.notBlank}")
+	@Size(min = 1, max = 15, message = "{customer.phoneNumber.size}")
 	private String phoneNumber;
 
-	@NotNull(message = "{customerDto.contactAddress.notNull}")
-	@NotBlank(message = "{customerDto.contactAddress.notBlank}")
-	@Size(min = 1, max = 200, message = "{customerDto.contactAddress.size}")
+	@NotNull(message = "{customer.contactAddress.notNull}")
+	@NotBlank(message = "{customer.contactAddress.notBlank}")
+	@Size(min = 1, max = 200, message = "{customer.contactAddress.size}")
 	private String contactAddress;
 
-	@NotNull(message = "{customerDto.homeAddress.notNull}")
-	@NotBlank(message = "{customerDto.homeAddress.notBlank}")
-	@Size(min = 1, max = 200, message = "{customerDto.homeAddress.size}")
+	@NotNull(message = "{customer.homeAddress.notNull}")
+	@NotBlank(message = "{customer.homeAddress.notBlank}")
+	@Size(min = 1, max = 200, message = "{customer.homeAddress.size}")
 	private String homeAddress;
 	
-
-	@NotNull(message = "{customerDto.dateOfBirth.notNull}")
-	@NotBlank(message = "{customerDto.dateOfBirth.notBlank}")
+	@NotNull(message = "{customer.dateOfBirth.notNull}")
 	@DateTimeFormat(iso = ISO.DATE)
 	@JsonFormat(pattern = "dd-MM-yyyy")
-	@Past(message = "{customerDto.dateOfBirth.past}")
-	
+	@Past(message = "{customer.dateOfBirth.past}")
 	private Date dateOfBirth;
 
 }
