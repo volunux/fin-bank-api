@@ -2,6 +2,8 @@ package com.fintest.testifi.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,14 +25,14 @@ import com.fintest.testifi.service.CustomerService;
 @RestController
 @RequestMapping(value ="customer" ,
 				consumes = { MediaType.APPLICATION_JSON_VALUE } ,
-				produces = { MediaType.APPLICATION_JSON_VALUE })
+					produces = { MediaType.APPLICATION_JSON_VALUE })
 public class CustomerController {
 
 	private CustomerService service;
 
 	public CustomerController(CustomerService service) {
 		this.service = service;
-	}
+	}	
 	
 	@GetMapping
 	public List<Customer> findCustomers(@RequestParam(required = false) String emailAddress) {
@@ -43,12 +45,12 @@ public class CustomerController {
 	}
 	
 	@PostMapping({"" , "/save"})
-	public Customer saveCustomer(@Validated @RequestBody CustomerDto customerDto) {
+	public Customer saveCustomer(@Valid @RequestBody CustomerDto customerDto) {
 		return service.createCustomer(customerDto);
 	}
 		
 	@PutMapping({"{id}" , "/update/{id}"})
-	public Customer updateCustomer(@PathVariable Long id, @Validated @RequestBody CustomerUpdateDto customerUpdateDto) {
+	public Customer updateCustomer(@PathVariable Long id, @Valid @RequestBody CustomerUpdateDto customerUpdateDto) {
 		return service.updateCustomer(id, customerUpdateDto);
 	}
 	
@@ -60,6 +62,16 @@ public class CustomerController {
 	@PutMapping({"/remove/many"})
 	public boolean deleteManyCustomer(@Validated @RequestBody DeleteManyCustomerDto deleteManyCustomerDto) {
 		return service.deleteManyCustomer(deleteManyCustomerDto);
+	}
+	
+	@PutMapping({"/remove/all"})
+	public boolean deleteAllCustomer() {
+		return service.deleteAllCustomer();
+	}	
+	
+	@GetMapping("/exists/email/{email}")
+	public boolean existsCustomerEmailAddress(@PathVariable(required = true, name = "email") String emailAddress) {
+		return service.existCustomerEmail(emailAddress);
 	}
 	
 }

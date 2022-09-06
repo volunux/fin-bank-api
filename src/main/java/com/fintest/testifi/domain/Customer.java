@@ -50,7 +50,7 @@ public class Customer {
 	
 	@CreationTimestamp
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(nullable = false, name = "created_on")
+	@Column(nullable = false, name = "created_on", updatable = false)
 	private Date createdOn;
 	
 	@UpdateTimestamp	

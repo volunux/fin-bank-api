@@ -39,7 +39,7 @@ public class CustomerDto {
 	@NotNull(message = "{customer.phoneNumber.notNull}")
 	@NotBlank(message = "{customer.phoneNumber.notBlank}")
 	@Size(min = 1, max = 15, message = "{customer.phoneNumber.size}")
-	@Pattern(regexp = "^\\+234[0-9]{10}", message ="{phoneNumber.pattern}")
+	@Pattern(regexp = "^\\+234[0-9]{10}", message ="{customer.phoneNumber.pattern}")
 	private String phoneNumber;
 
 	@NotNull(message = "{customer.contactAddress.notNull}")
