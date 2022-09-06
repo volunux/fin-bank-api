@@ -9,16 +9,19 @@ import com.fintest.testifi.domain.dto.DeleteManyCustomerDto;
 
 public interface CustomerService {
 	
-	List<Customer> findAllCustomer();
+	List<Customer> findAllCustomer(String emailAddress);
 	
 	Customer findCustomer(Long id);
 	
 	Customer createCustomer(CustomerDto customerDto);
 	
-	Customer updateCustomer(CustomerUpdateDto customerUpdateDto);
+	Customer updateCustomer(Long id, CustomerUpdateDto customerUpdateDto);
 	
 	boolean deleteCustomer(Long id);
 	
 	boolean deleteManyCustomer(DeleteManyCustomerDto customerDto);
+	
+	boolean existCustomerEmail(String emailAddress);
 
+	boolean deleteAllCustomer();
 }

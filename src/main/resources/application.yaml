@@ -22,7 +22,7 @@ spring:
         format_sql: true
         dialect: org.hibernate.dialect.PostgreSQL9Dialect
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update 
 
         
 logging:

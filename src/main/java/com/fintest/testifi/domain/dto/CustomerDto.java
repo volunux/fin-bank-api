@@ -6,6 +6,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -26,18 +27,19 @@ public class CustomerDto {
 	
 	@NotNull(message = "{customer.fullName.notNull}")
 	@NotBlank(message = "{customer.fullName.notBlank}")
-	@Size(min = 3, max = 150, message = "{customer.fullName.size}")
+	@Size(min = 3, max = 35, message = "{customer.fullName.size}")
 	private String fullName;
 	
 	@NotNull(message = "{customer.emailAddress.notNull}")
-	@NotBlank(message = "{customer.emailAddress.notBlank}")
-	@Email(message = "{customer.emailAddress.email}")
+	@NotBlank(message = "{customer.emailAddress.notBlank}")	
+	@Email(message = "{customer.emailAddress.pattern}")
 	@Size(min = 5, max = 50, message = "{customer.emailAddress.size}")
 	private String emailAddress;
 	
 	@NotNull(message = "{customer.phoneNumber.notNull}")
 	@NotBlank(message = "{customer.phoneNumber.notBlank}")
 	@Size(min = 1, max = 15, message = "{customer.phoneNumber.size}")
+	@Pattern(regexp = "^\\+234[0-9]{10}", message ="{phoneNumber.pattern}")
 	private String phoneNumber;
 
 	@NotNull(message = "{customer.contactAddress.notNull}")

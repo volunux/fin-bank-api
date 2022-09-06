@@ -6,7 +6,7 @@ import com.fintest.testifi.domain.Customer;
 
 public interface CustomerRepository {
 	
-	List<Customer> findAll();
+	List<Customer> findAll(String emailAddress);
 	
 	Customer findOne(Long id);
 	
@@ -14,7 +14,11 @@ public interface CustomerRepository {
 	
 	Customer update(Customer customer);
 	
+	boolean existCustomerEmail(String emailAddress);
+	
 	boolean remove(Long id);
 	
 	boolean removeMany(List<Long> ids);
+	
+	boolean removeAllCustomer();
 }

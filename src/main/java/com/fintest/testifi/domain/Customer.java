@@ -9,6 +9,9 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import lombok.EqualsAndHashCode;
 
 import lombok.Setter;
@@ -20,7 +23,7 @@ import lombok.Getter;
 @EqualsAndHashCode
 @ToString
 @Entity
-@Table(name = "customers")
+@Table(name = "customer")
 public class Customer {
 	
 	@Id
@@ -29,9 +32,9 @@ public class Customer {
 	@Column(nullable = false, name = "full_name")
 	private String fullName;	
 	
-	@Column(nullable = false, unique = true, name = "email_address")
-	private String emailAddress;
-	
+	@Column(nullable = false, unique = true, updatable = false, name = "email_address")
+	private String emailAddress;	
+		
 	@Column(nullable = false, unique = true, name = "phone_number")
 	private String phoneNumber;
 	
@@ -44,4 +47,14 @@ public class Customer {
 	@Temporal(TemporalType.DATE)
 	@Column(nullable = false, name = "date_of_birth")
 	private Date dateofBirth;
+	
+	@CreationTimestamp
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(nullable = false, name = "created_on")
+	private Date createdOn;
+	
+	@UpdateTimestamp	
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(nullable = false, name = "updated_on")
+	private Date updatedOn;
 }
