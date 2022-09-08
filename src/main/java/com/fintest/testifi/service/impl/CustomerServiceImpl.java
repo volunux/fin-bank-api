@@ -6,26 +6,36 @@ import javax.transaction.Transactional;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.fintest.testifi.domain.BankAccount;
 import com.fintest.testifi.domain.Customer;
 import com.fintest.testifi.domain.dto.CustomerDto;
 import com.fintest.testifi.domain.dto.CustomerUpdateDto;
 import com.fintest.testifi.domain.dto.DeleteManyCustomerDto;
 import com.fintest.testifi.domain.exception.CustomerNotFoundException;
+import com.fintest.testifi.domain.other.BankAccountStatus;
 import com.fintest.testifi.repository.CustomerRepository;
+import com.fintest.testifi.service.BankAccountService;
 import com.fintest.testifi.service.CustomerService;
+import com.fintest.testifi.util.FinBankUtil;
 
 @Service
 public class CustomerServiceImpl implements CustomerService {
 	
 	private CustomerRepository repository;
+	private BankAccountService bankAccountService;
+
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 	
 	@Autowired
 	private ModelMapper modelMapper;
 		
-	public CustomerServiceImpl(CustomerRepository repository) {
+	public CustomerServiceImpl(CustomerRepository repository, BankAccountService bankAccountService) {
 		this.repository = repository;
+		this.bankAccountService = bankAccountService;
 	}
 	
 	@Override
@@ -49,7 +59,20 @@ public class CustomerServiceImpl implements CustomerService {
 	public Customer createCustomer(CustomerDto customerDto) {
 		Customer customer = new Customer();
 		customer = modelMapper.map(customerDto, Customer.class);
-		return repository.save(customer);
+		
+		BankAccount bankAccount = new BankAccount();
+		bankAccount.setBalance(customerDto.getInitialDeposit());
+		bankAccount.setInterestRate((float) 0.8);
+		bankAccount.setCustomer(customer);
+		bankAccount.setAccountType(FinBankUtil.getBankAccountType(customerDto.getAccountType()));
+		bankAccount.setAccountStatus(BankAccountStatus.ACTIVE);
+		
+		String accountPinHash = passwordEncoder.encode(String.valueOf(customerDto.getAccountPin()));
+		bankAccount.setAccountPin(accountPinHash);;
+		
+		customer.getBankAccounts().add(bankAccount);
+		customer = repository.save(customer);
+		return customer;
 	}
 	
 	@Override

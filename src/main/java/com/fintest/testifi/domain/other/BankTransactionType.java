@@ -7,6 +7,4 @@ public enum BankTransactionType {
 	DEPOSIT,
 	BANK_FEE,
 	WITHDRAWAL,
-	ATM_WITHDRAWAL
-
 }

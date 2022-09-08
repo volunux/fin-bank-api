@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.fintest.testifi.domain.exception.BankAccountDuplicateEntityException;
+import com.fintest.testifi.domain.exception.BankAccountNotFoundException;
 import com.fintest.testifi.domain.exception.CustomerDuplicateEntityException;
 import com.fintest.testifi.domain.exception.CustomerNotFoundException;
 
@@ -68,5 +70,27 @@ public class GlobalExceptionHandlerController {
 		errors.put("code", ex.getCode().toString());
 		return errors;
 	}
+	
+	  @ResponseStatus(HttpStatus.NOT_FOUND)
+	  @ExceptionHandler(BankAccountNotFoundException.class)
+	  public Object handleDoctorNotFound(BankAccountNotFoundException ex) {
+	    Map<String, String> errors = new HashMap<String, String>();
+	    errors.put("entityName", BankAccountNotFoundException.ENTITY_NAME);
+	    errors.put("message", ex.getMessage());
+	    ex.setCode(HttpStatus.NOT_FOUND.value());
+	    errors.put("code", ex.getCode().toString());
+	    return errors;
+	  }
+	  
+	  @ResponseStatus(HttpStatus.BAD_REQUEST)
+	  @ExceptionHandler(BankAccountDuplicateEntityException.class)
+	  public Object handleDoctorDuplicateEntity(BankAccountDuplicateEntityException ex) {
+	    Map<String, String> errors = new HashMap<String, String>();
+	    errors.put("entityName", BankAccountDuplicateEntityException.ENTITY_NAME);
+	    errors.put("message", ex.getMessage());
+	    ex.setCode(HttpStatus.BAD_REQUEST.value());
+	    errors.put("code", ex.getCode().toString());
+	    return errors;
+	  }
 	
 }

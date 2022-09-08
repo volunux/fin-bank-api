@@ -11,11 +11,11 @@ import com.fintest.testifi.domain.Fintest;
 @RequestMapping(value ="" ,
 				consumes = { MediaType.APPLICATION_JSON_VALUE } ,
 				produces = { MediaType.APPLICATION_JSON_VALUE })
-public class HomeController {
+public class FintestController {
 
 	@GetMapping
-	public Fintest homepage() {
+	public Fintest fintest() {
 		return new Fintest();
-	}
-
+	}	
 }
+

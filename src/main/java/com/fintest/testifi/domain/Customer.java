@@ -1,10 +1,15 @@
 package com.fintest.testifi.domain;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -13,10 +18,9 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import lombok.EqualsAndHashCode;
-
+import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import lombok.Getter;
 
 @Getter
 @Setter
@@ -57,4 +61,7 @@ public class Customer {
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(nullable = false, name = "updated_on")
 	private Date updatedOn;
+	
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "customer", fetch = FetchType.EAGER)
+	private Set<BankAccount> bankAccounts = new HashSet<BankAccount>();
 }

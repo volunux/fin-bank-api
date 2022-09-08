@@ -3,6 +3,7 @@ package com.fintest.testifi.domain.dto;
 import java.util.Date;
 
 import javax.validation.constraints.Email;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
@@ -13,6 +14,9 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fintest.testifi.domain.other.BankAccountType;
+import com.fintest.testifi.validator.BankAccountMinimumAgeValidator;
+import com.fintest.testifi.validator.BankAccountTypeValidator;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -56,6 +60,20 @@ public class CustomerDto {
 	@DateTimeFormat(iso = ISO.DATE)
 	@JsonFormat(pattern = "dd-MM-yyyy")
 	@Past(message = "{customer.dateOfBirth.past}")
+	@BankAccountMinimumAgeValidator(age = 18, message = "{customer.dateOfBirth.minimumAge}")
 	private Date dateOfBirth;
+
+	@Min(value = 0, message = "{bankAccount.initialDeposit.min}")
+	private Double initialDeposit;
+	
+	@NotNull(message = "{bankAccount.type.notNull}")
+	@NotBlank(message = "{bankAccount.type.notBlank}")
+	@BankAccountTypeValidator(enumClass = BankAccountType.class, message = "{bankAccount.type.enum}")
+	private String accountType;
+	
+	@NotNull(message = "{bankAccount.pin.notNull}")
+	@Min(value = 999, message = "{bankAccount.pin.min}")
+	@Min(value = 9999, message = "{bankAccount.pin.min}")
+	private Long accountPin;
 
 }

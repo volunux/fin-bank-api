@@ -5,8 +5,8 @@ import lombok.Data;
 @Data
 public class Fintest {
 
-	private String name = "Fintest";
+	private String name = "Fintest Application";
 	private double version = 1.0;
-	private String description = "Fintest is a bank application that allows the user to deposit and withdraw money from their bank account";
+	private String description = "Fintest is a financial service and bank application that allows the user to deposit and withdraw money from their bank account";
 
 }
