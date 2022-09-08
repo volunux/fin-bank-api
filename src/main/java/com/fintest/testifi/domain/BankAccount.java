@@ -7,7 +7,10 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
@@ -19,6 +22,8 @@ import javax.persistence.TemporalType;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fintest.testifi.domain.other.BankAccountStatus;
 import com.fintest.testifi.domain.other.BankAccountType;
 
@@ -31,16 +36,22 @@ import lombok.ToString;
 @Setter
 @EqualsAndHashCode
 @ToString
+@JsonIdentityInfo(
+		  generator = ObjectIdGenerators.PropertyGenerator.class, 
+		  property = "id")
 @Entity
-@Table(name = "bank_account")
+@Table(name = "bank_account" , indexes = {
+		@Index(columnList = "account_pin", name ="transaction_pin_idx", unique = true)
+})
 public class BankAccount {
 	
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
 	@Column(nullable = false, name = "account_number", updatable = false)
 	private String accountNumber;
-		
+
 	@Column(nullable = false, name = "balance")
 	private Double balance;
 	
@@ -63,6 +74,7 @@ public class BankAccount {
 	
 	@JoinColumn(name = "customer_id", nullable = false)
 	@ManyToOne(fetch = FetchType.EAGER)
+	@EqualsAndHashCode.Exclude
 	private Customer customer;
 	
 	@Column(nullable = false, name = "account_type")

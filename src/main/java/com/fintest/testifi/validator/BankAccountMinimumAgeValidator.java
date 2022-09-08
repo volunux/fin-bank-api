@@ -8,11 +8,11 @@ import java.lang.annotation.Target;
 import javax.validation.Constraint;
 import javax.validation.Payload;
 
-import com.fintest.testifi.validator.impl.BankAccountStatusValidatorImpl;
+import com.fintest.testifi.validator.impl.BankAccountMinimumAgeValidatorImpl;
 
 @Target({ ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER })
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = BankAccountStatusValidatorImpl.class)
+@Constraint(validatedBy = BankAccountMinimumAgeValidatorImpl.class)
 public @interface BankAccountMinimumAgeValidator {
 	
 	int age() default 18;

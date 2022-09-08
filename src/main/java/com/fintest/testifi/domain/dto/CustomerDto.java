@@ -3,6 +3,7 @@ package com.fintest.testifi.domain.dto;
 import java.util.Date;
 
 import javax.validation.constraints.Email;
+import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -73,7 +74,7 @@ public class CustomerDto {
 	
 	@NotNull(message = "{bankAccount.pin.notNull}")
 	@Min(value = 999, message = "{bankAccount.pin.min}")
-	@Min(value = 9999, message = "{bankAccount.pin.min}")
+	@Max(value = 9999, message = "{bankAccount.pin.min}")
 	private Long accountPin;
 
 }

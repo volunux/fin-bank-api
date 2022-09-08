@@ -62,7 +62,7 @@ public class CustomerServiceImpl implements CustomerService {
 		
 		BankAccount bankAccount = new BankAccount();
 		bankAccount.setBalance(customerDto.getInitialDeposit());
-		bankAccount.setInterestRate((float) 0.8);
+		bankAccount.setInterestRate(FinBankUtil.getDefaultInterestRate());
 		bankAccount.setCustomer(customer);
 		bankAccount.setAccountType(FinBankUtil.getBankAccountType(customerDto.getAccountType()));
 		bankAccount.setAccountStatus(BankAccountStatus.ACTIVE);

@@ -13,7 +13,9 @@ import org.springframework.stereotype.Repository;
 
 import com.fintest.testifi.domain.BankAccount;
 import com.fintest.testifi.domain.exception.BankAccountDuplicateEntityException;
+import com.fintest.testifi.domain.other.BankAccountStatus;
 import com.fintest.testifi.repository.BankAccountRepository;
+import com.fintest.testifi.util.FinBankUtil;
 
 @Repository
 public class BankAccountRepositoryImpl implements BankAccountRepository {
@@ -53,6 +55,32 @@ public class BankAccountRepositoryImpl implements BankAccountRepository {
 	@Override
 	public BankAccount update(BankAccount bankAccount) {
 		return entityManager.merge(bankAccount);
+	}
+	
+	@Override
+	public boolean updateAccountPin(String accountNumber, Long accountPin) {
+		
+		String queryText = "UPDATE BankAccount ba SET ba.accountPin = :newAccountPin where ba.accountNumber = :accountNumber";
+		Query query = entityManager.createQuery(queryText);
+		
+		query.setParameter("accountNumber", accountNumber);
+		query.setParameter("newAccountPin", accountPin);
+		
+		int result = query.executeUpdate();
+		return result > 1;
+	}
+	
+	@Override
+	public boolean updateAccountStatus(String accountNumber, String bankAccountStatus, Long accountPin) {
+		
+		String queryText = "UPDATE BankAccount ba SET ba.accountStatus = :newAccountStatus where ba.accountNumber = :accountNumber";
+		Query query = entityManager.createQuery(queryText);
+		
+		query.setParameter("accountNumber", accountNumber);
+		query.setParameter("newAccountStatus", bankAccountStatus);
+		
+		int result = query.executeUpdate();
+		return result > 1;
 	}
 	
 	@Override

@@ -5,8 +5,6 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.http.MediaType;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,8 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fintest.testifi.domain.BankAccount;
 import com.fintest.testifi.domain.dto.BankAccountDto;
+import com.fintest.testifi.domain.dto.BankAccountPinUpdateDto;
+import com.fintest.testifi.domain.dto.BankAccountStatusUpdateDto;
 import com.fintest.testifi.domain.dto.BankAccountUpdateDto;
-import com.fintest.testifi.domain.dto.DeleteManyBankAccountDto;
 import com.fintest.testifi.service.BankAccountService;
 
 @RestController
@@ -54,19 +53,14 @@ public class BankAccountController {
 		return service.updateBankAccount(id, bankAccountUpdateDto);
 	}
 	
-	@DeleteMapping({"{id}" , "/delete/{id}"})
-	public boolean deleteBankAccount(@PathVariable Long id) {
-		return service.deleteBankAccount(id);
+	@PutMapping({"/update-pin"})
+	public boolean updateBankAccountPin(@Valid @RequestBody BankAccountPinUpdateDto bankAccountPinUpdateDto) {
+		return service.updateBankAccountPin(bankAccountPinUpdateDto);
 	}
 	
-	@PutMapping({"/remove/many"})
-	public boolean deleteManyBankAccount(@Validated @RequestBody DeleteManyBankAccountDto deleteManyBankAccountDto) {
-		return service.deleteManyBankAccount(deleteManyBankAccountDto);
+	@PutMapping({"/update-status/"})
+	public boolean updateBankAccountStatus(@Valid @RequestBody BankAccountStatusUpdateDto bankAccountStatusUpdateDto) {
+		return service.updateBankAccountStatus(bankAccountStatusUpdateDto);
 	}
-	
-	@PutMapping({"/remove/all"})
-	public boolean deleteAllBankAccount() {
-		return service.deleteAllBankAccount();
-	}	
 		
 }

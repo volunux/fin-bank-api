@@ -23,7 +23,6 @@ import lombok.ToString;
 @ToString
 public class CustomerUpdateDto {
 
-	
 	@Size(min = 3, max = 35, message = "{customer.fullName.size}")
 	private String fullName;
 	
@@ -45,7 +44,5 @@ public class CustomerUpdateDto {
 	@JsonFormat(pattern = "dd-MM-yyyy")
 	@Past(message = "{customer.dateOfBirth.past}")
 	private Date dateOfBirth;
-
-
 
 }

@@ -21,9 +21,6 @@ public class BankAccountMinimumAgeValidatorImpl implements ConstraintValidator<B
 		calendar.setTime(value);
 		int currentYear = Calendar.getInstance().get(Calendar.YEAR);
 		int year = calendar.get(Calendar.YEAR);
-		System.out.println(calendar.get(Calendar.YEAR));
-		System.out.println(calendar.get(Calendar.MONTH));
-		System.out.println(calendar.get(Calendar.DAY_OF_MONTH));
 
 		if ((currentYear - year) >= 18) {
 			return true;

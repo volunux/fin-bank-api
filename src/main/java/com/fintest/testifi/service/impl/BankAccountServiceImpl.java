@@ -6,26 +6,38 @@ import javax.transaction.Transactional;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.fintest.testifi.domain.BankAccount;
 import com.fintest.testifi.domain.dto.BankAccountDto;
+import com.fintest.testifi.domain.dto.BankAccountPinUpdateDto;
+import com.fintest.testifi.domain.dto.BankAccountStatusUpdateDto;
 import com.fintest.testifi.domain.dto.BankAccountUpdateDto;
 import com.fintest.testifi.domain.dto.DeleteManyBankAccountDto;
 import com.fintest.testifi.domain.exception.BankAccountNotFoundException;
+import com.fintest.testifi.domain.exception.BankAccountPinException;
+import com.fintest.testifi.domain.other.BankAccountStatus;
 import com.fintest.testifi.repository.BankAccountRepository;
+import com.fintest.testifi.repository.jpa.BankAccountJpaRepository;
 import com.fintest.testifi.service.BankAccountService;
+import com.fintest.testifi.util.FinBankUtil;
 
 @Service
 public class BankAccountServiceImpl implements BankAccountService {
 	
 	private BankAccountRepository repository;
+	private BankAccountJpaRepository jpaRepository;
 	
 	@Autowired
 	private ModelMapper modelMapper;
+	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 		
-	public BankAccountServiceImpl(BankAccountRepository repository) {
+	public BankAccountServiceImpl(BankAccountRepository repository, BankAccountJpaRepository jpaRepository) {
 		this.repository = repository;
+		this.jpaRepository = jpaRepository;
 	}
 	
 	@Override
@@ -44,6 +56,16 @@ public class BankAccountServiceImpl implements BankAccountService {
 		}
 	}
 	
+	public BankAccount findBankAccountByAccountNumber(String accountNumber) {
+		BankAccount bankAccount = jpaRepository.findByAccountNumber(accountNumber);
+		if (bankAccount != null) {
+			return bankAccount;
+		}
+		else {
+			throw new BankAccountNotFoundException(accountNumber);
+		}
+	}
+	
 	@Override
 	@Transactional
 	public BankAccount createBankAccount(BankAccountDto bankAccountDto) {
@@ -59,11 +81,47 @@ public class BankAccountServiceImpl implements BankAccountService {
 		if (existingBankAccount == null) {
 			throw new BankAccountNotFoundException(id);
 		}
-
+		
 		BankAccount bankAccount = new BankAccount();
 		bankAccount = modelMapper.map(bankAccountUpdateDto, BankAccount.class);
 		bankAccount.setId(id);
 		return repository.update(bankAccount);
+	}
+	
+	@Override
+	@Transactional
+	public boolean updateBankAccountPin(BankAccountPinUpdateDto bankAccountPinUpdateDto) {
+		BankAccount existingBankAccount = jpaRepository.findByAccountNumber(bankAccountPinUpdateDto.getAccountNumber());
+		if (existingBankAccount == null) {
+			throw new BankAccountNotFoundException(bankAccountPinUpdateDto.getAccountNumber());
+		}
+
+		boolean accountPinValid = passwordEncoder.matches(bankAccountPinUpdateDto.getAccountPin().toString(), existingBankAccount.getAccountPin());
+		
+		if (!accountPinValid) {
+			throw new BankAccountPinException(bankAccountPinUpdateDto.getAccountNumber(), bankAccountPinUpdateDto.getAccountPin());		
+		}
+		
+		return repository.updateAccountPin(bankAccountPinUpdateDto.getAccountNumber(), bankAccountPinUpdateDto.getAccountPin());
+	}
+	
+	@Override
+	@Transactional
+	public boolean updateBankAccountStatus(BankAccountStatusUpdateDto bankAccountStatusUpdateDto) {
+		BankAccount existingBankAccount = jpaRepository.findByAccountNumber(bankAccountStatusUpdateDto.getAccountNumber());
+		if (existingBankAccount == null) {
+			throw new BankAccountNotFoundException(bankAccountStatusUpdateDto.getAccountNumber());
+		}
+
+		boolean accountPinValid = passwordEncoder.matches(bankAccountStatusUpdateDto.getAccountPin().toString(), existingBankAccount.getAccountPin());
+		
+		if (!accountPinValid) {
+			throw new BankAccountPinException(bankAccountStatusUpdateDto.getAccountNumber(), bankAccountStatusUpdateDto.getAccountPin());		
+		}
+		
+		BankAccountStatus bankAccountStatus = FinBankUtil.getBankAccountStatus(bankAccountStatusUpdateDto.getAccountStatus());
+		
+		return repository.updateAccountStatus(bankAccountStatusUpdateDto.getAccountNumber(), bankAccountStatus.getValue(), bankAccountStatusUpdateDto.getAccountPin());
 	}
 	
 	@Override

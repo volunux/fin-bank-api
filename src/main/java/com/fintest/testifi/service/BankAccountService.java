@@ -4,6 +4,8 @@ import java.util.List;
 
 import com.fintest.testifi.domain.BankAccount;
 import com.fintest.testifi.domain.dto.BankAccountDto;
+import com.fintest.testifi.domain.dto.BankAccountPinUpdateDto;
+import com.fintest.testifi.domain.dto.BankAccountStatusUpdateDto;
 import com.fintest.testifi.domain.dto.BankAccountUpdateDto;
 import com.fintest.testifi.domain.dto.DeleteManyBankAccountDto;
 
@@ -16,6 +18,10 @@ public interface BankAccountService {
 	BankAccount createBankAccount(BankAccountDto bankDto);
 	
 	BankAccount updateBankAccount(Long id, BankAccountUpdateDto bankAccountUpdateDto);
+	
+	boolean updateBankAccountPin(BankAccountPinUpdateDto bankAccountPinUpdateDto);
+	
+	boolean updateBankAccountStatus(BankAccountStatusUpdateDto bankAccountStatusUpdateDto);
 	
 	boolean deleteBankAccount(Long id);
 	

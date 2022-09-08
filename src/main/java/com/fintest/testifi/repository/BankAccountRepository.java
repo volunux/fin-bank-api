@@ -3,6 +3,7 @@ package com.fintest.testifi.repository;
 import java.util.List;
 
 import com.fintest.testifi.domain.BankAccount;
+import com.fintest.testifi.domain.other.BankAccountStatus;
 
 public interface BankAccountRepository {
 
@@ -13,6 +14,10 @@ public interface BankAccountRepository {
 	BankAccount save(BankAccount bankAccount);
 	
 	BankAccount update(BankAccount bankAccount);
+	
+	boolean updateAccountPin(String accountNumber, Long newAccountPin);
+	
+	boolean updateAccountStatus(String accountNumber, String bankAccountStatus, Long newAccountPin);
 	
 	boolean remove(Long id);
 	

@@ -21,5 +21,10 @@ public enum BankAccountType {
 	public String getValue() {
 		return this.accountType;
 	}
+	
+	@Override
+	public String toString() {
+		return this.accountType;
+	}
 
 }

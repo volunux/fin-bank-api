@@ -59,5 +59,9 @@ public class FinBankUtil {
 				return BankAccountStatus.ACTIVE;
 		}
 	}
+	
+	public static final float getDefaultInterestRate() {
+		return (float) 0.8;
+	}
 
 }

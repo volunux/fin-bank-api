@@ -21,5 +21,10 @@ public enum BankAccountStatus {
 	public String getValue() {
 		return this.accountStatus;
 	}
+	
+	@Override
+	public String toString() {
+		return this.accountStatus;
+	}
 
 }
