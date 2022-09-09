@@ -18,7 +18,6 @@ import com.fintest.testifi.domain.BankAccount;
 import com.fintest.testifi.domain.dto.BankAccountDto;
 import com.fintest.testifi.domain.dto.BankAccountPinUpdateDto;
 import com.fintest.testifi.domain.dto.BankAccountStatusUpdateDto;
-import com.fintest.testifi.domain.dto.BankAccountUpdateDto;
 import com.fintest.testifi.service.BankAccountService;
 
 @RestController
@@ -36,7 +35,7 @@ public class BankAccountController {
 	@GetMapping
 	public List<BankAccount> findBankAccounts(@RequestParam(required = false, name ="customerId") Long customerId) {
 		return service.findAllBankAccount(customerId);
-	}	
+	}
 	
 	@GetMapping("/detail/{id}")
 	public BankAccount findBankAccount(@PathVariable Long id) {
@@ -47,18 +46,13 @@ public class BankAccountController {
 	public BankAccount saveBankAccount(@Valid @RequestBody BankAccountDto bankAccountDto) {
 		return service.createBankAccount(bankAccountDto);
 	}
-		
-	@PutMapping({"{id}" , "/update/{id}"})
-	public BankAccount updateBankAccount(@PathVariable Long id, @Valid @RequestBody BankAccountUpdateDto bankAccountUpdateDto) {
-		return service.updateBankAccount(id, bankAccountUpdateDto);
-	}
 	
 	@PutMapping({"/update-pin"})
 	public boolean updateBankAccountPin(@Valid @RequestBody BankAccountPinUpdateDto bankAccountPinUpdateDto) {
 		return service.updateBankAccountPin(bankAccountPinUpdateDto);
 	}
 	
-	@PutMapping({"/update-status/"})
+	@PutMapping({"/update-status"})
 	public boolean updateBankAccountStatus(@Valid @RequestBody BankAccountStatusUpdateDto bankAccountStatusUpdateDto) {
 		return service.updateBankAccountStatus(bankAccountStatusUpdateDto);
 	}

@@ -21,7 +21,7 @@ public class BankAccountDto {
 
 	@NotNull(message = "{bankAccount.accountNumber.notNull}")
 	@NotBlank(message = "{bankAccount.accountNumber.notBlank}")
-	@Size(min = 1, max = 10, message = "{bankAccount.accountNumber.size}")
+	@Size(min = 1, max = 12, message = "{bankAccount.accountNumber.size}")
 	private String accountNumber;
 	
 	@NotNull(message = "{bankAccount.type.notNull}")

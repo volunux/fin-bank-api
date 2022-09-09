@@ -15,6 +15,7 @@ import com.fintest.testifi.domain.dto.BankAccountPinUpdateDto;
 import com.fintest.testifi.domain.dto.BankAccountStatusUpdateDto;
 import com.fintest.testifi.domain.dto.BankAccountUpdateDto;
 import com.fintest.testifi.domain.dto.DeleteManyBankAccountDto;
+import com.fintest.testifi.domain.exception.BankAccountLockedException;
 import com.fintest.testifi.domain.exception.BankAccountNotFoundException;
 import com.fintest.testifi.domain.exception.BankAccountPinException;
 import com.fintest.testifi.domain.other.BankAccountStatus;
@@ -92,6 +93,7 @@ public class BankAccountServiceImpl implements BankAccountService {
 	@Transactional
 	public boolean updateBankAccountPin(BankAccountPinUpdateDto bankAccountPinUpdateDto) {
 		BankAccount existingBankAccount = jpaRepository.findByAccountNumber(bankAccountPinUpdateDto.getAccountNumber());
+		System.out.println(existingBankAccount);
 		if (existingBankAccount == null) {
 			throw new BankAccountNotFoundException(bankAccountPinUpdateDto.getAccountNumber());
 		}
@@ -102,7 +104,12 @@ public class BankAccountServiceImpl implements BankAccountService {
 			throw new BankAccountPinException(bankAccountPinUpdateDto.getAccountNumber(), bankAccountPinUpdateDto.getAccountPin());		
 		}
 		
-		return repository.updateAccountPin(bankAccountPinUpdateDto.getAccountNumber(), bankAccountPinUpdateDto.getAccountPin());
+		if (existingBankAccount.getAccountStatus() != BankAccountStatus.ACTIVE) {
+			throw new BankAccountLockedException(existingBankAccount.getAccountNumber());
+		}
+		
+		String accountPinHash = passwordEncoder.encode(bankAccountPinUpdateDto.getNewAccountPin().toString());
+		return repository.updateAccountPin(bankAccountPinUpdateDto.getAccountNumber(), accountPinHash);
 	}
 	
 	@Override
@@ -120,8 +127,7 @@ public class BankAccountServiceImpl implements BankAccountService {
 		}
 		
 		BankAccountStatus bankAccountStatus = FinBankUtil.getBankAccountStatus(bankAccountStatusUpdateDto.getAccountStatus());
-		
-		return repository.updateAccountStatus(bankAccountStatusUpdateDto.getAccountNumber(), bankAccountStatus.getValue(), bankAccountStatusUpdateDto.getAccountPin());
+		return repository.updateAccountStatus(bankAccountStatusUpdateDto.getAccountNumber(), bankAccountStatus, bankAccountStatusUpdateDto.getAccountPin().toString());
 	}
 	
 	@Override

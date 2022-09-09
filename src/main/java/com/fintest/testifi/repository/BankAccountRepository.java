@@ -15,9 +15,9 @@ public interface BankAccountRepository {
 	
 	BankAccount update(BankAccount bankAccount);
 	
-	boolean updateAccountPin(String accountNumber, Long newAccountPin);
+	boolean updateAccountPin(String accountNumber, String newAccountPin);
 	
-	boolean updateAccountStatus(String accountNumber, String bankAccountStatus, Long newAccountPin);
+	boolean updateAccountStatus(String accountNumber, BankAccountStatus accountStatus, String newAccountPin);
 	
 	boolean remove(Long id);
 	

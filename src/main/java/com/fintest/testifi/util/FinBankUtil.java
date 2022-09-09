@@ -9,6 +9,7 @@ import org.springframework.beans.BeanWrapperImpl;
 
 import com.fintest.testifi.domain.other.BankAccountStatus;
 import com.fintest.testifi.domain.other.BankAccountType;
+import com.fintest.testifi.domain.other.BankTransactionType;
 
 public class FinBankUtil {
 
@@ -57,6 +58,26 @@ public class FinBankUtil {
 			
 			default:
 				return BankAccountStatus.ACTIVE;
+		}
+	}
+	
+	public static final BankTransactionType getBankTransactionType(String transactionType) {
+		
+		switch (transactionType) {
+			case "credit":
+				return BankTransactionType.CREDIT;
+				
+			case "debit":
+				return BankTransactionType.DEBIT;
+			
+			case "deposit":
+				return BankTransactionType.DEPOSIT;
+				
+			case "bank-fee":
+				return BankTransactionType.BANK_FEE;
+			
+			default:
+				return BankTransactionType.WITHDRAWAL;
 		}
 	}
 	

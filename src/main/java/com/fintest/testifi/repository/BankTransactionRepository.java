@@ -1,5 +1,8 @@
 package com.fintest.testifi.repository;
 
-public interface	 BankTransactionRepository {
+import com.fintest.testifi.domain.BankTransaction;
 
+public interface BankTransactionRepository {
+	
+	BankTransaction createBankTransaction(BankTransaction bankTransaction);
 }

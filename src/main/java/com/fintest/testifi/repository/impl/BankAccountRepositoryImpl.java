@@ -15,7 +15,6 @@ import com.fintest.testifi.domain.BankAccount;
 import com.fintest.testifi.domain.exception.BankAccountDuplicateEntityException;
 import com.fintest.testifi.domain.other.BankAccountStatus;
 import com.fintest.testifi.repository.BankAccountRepository;
-import com.fintest.testifi.util.FinBankUtil;
 
 @Repository
 public class BankAccountRepositoryImpl implements BankAccountRepository {
@@ -58,7 +57,7 @@ public class BankAccountRepositoryImpl implements BankAccountRepository {
 	}
 	
 	@Override
-	public boolean updateAccountPin(String accountNumber, Long accountPin) {
+	public boolean updateAccountPin(String accountNumber, String accountPin) {
 		
 		String queryText = "UPDATE BankAccount ba SET ba.accountPin = :newAccountPin where ba.accountNumber = :accountNumber";
 		Query query = entityManager.createQuery(queryText);
@@ -67,11 +66,11 @@ public class BankAccountRepositoryImpl implements BankAccountRepository {
 		query.setParameter("newAccountPin", accountPin);
 		
 		int result = query.executeUpdate();
-		return result > 1;
+		return result >= 1;
 	}
 	
 	@Override
-	public boolean updateAccountStatus(String accountNumber, String bankAccountStatus, Long accountPin) {
+	public boolean updateAccountStatus(String accountNumber, BankAccountStatus bankAccountStatus, String accountPin) {
 		
 		String queryText = "UPDATE BankAccount ba SET ba.accountStatus = :newAccountStatus where ba.accountNumber = :accountNumber";
 		Query query = entityManager.createQuery(queryText);
@@ -80,7 +79,7 @@ public class BankAccountRepositoryImpl implements BankAccountRepository {
 		query.setParameter("newAccountStatus", bankAccountStatus);
 		
 		int result = query.executeUpdate();
-		return result > 1;
+		return result >= 1;
 	}
 	
 	@Override

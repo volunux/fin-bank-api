@@ -101,7 +101,7 @@ public class CustomerServiceImpl implements CustomerService {
 		}
 	}
 	
-	@	Override
+	@Override
 	@Transactional
 	public boolean deleteManyCustomer(DeleteManyCustomerDto customerDto) {
 		return repository.removeMany(customerDto.getIds());

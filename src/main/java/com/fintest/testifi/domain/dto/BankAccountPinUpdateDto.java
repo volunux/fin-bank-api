@@ -19,11 +19,16 @@ public class BankAccountPinUpdateDto {
 
 	@NotNull(message = "{bankAccount.accountNumber.notNull}")
 	@NotBlank(message = "{bankAccount.accountNumber.notBlank}")
-	@Size(min = 1, max = 10, message = "{bankAccount.accountNumber.size}")
+	@Size(min = 1, max = 12, message = "{bankAccount.accountNumber.size}")
 	private String accountNumber;
 
 	@NotNull(message = "{bankAccount.pin.notNull}")
 	@Min(value = 999, message = "{bankAccount.pin.min}")
 	@Max(value = 9999, message = "{bankAccount.pin.min}")
 	private Long accountPin;
+	
+	@NotNull(message = "{bankAccount.pin.notNull}")
+	@Min(value = 999, message = "{bankAccount.pin.min}")
+	@Max(value = 9999, message = "{bankAccount.pin.min}")
+	private Long newAccountPin;
 }
