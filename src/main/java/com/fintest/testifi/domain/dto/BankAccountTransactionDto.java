@@ -29,9 +29,14 @@ public class BankAccountTransactionDto {
 	@Min(value = 9999, message = "{bankAccount.pin.min}")
 	private Long accountPin;
 	
-	@NotNull(message = "{bankAccount.amount.notNull}")
-	@Min(value = 1, message = "{bankAccount.amount.min}")
+	@NotNull(message = "{bankTransaction.amount.notNull}")
+	@Min(value = 1, message = "{bankTransaction.amount.min}")
 	private Double amount;
+	
+	@NotNull(message = "{bankTransaction.description.notNull}")
+	@NotBlank(message = "{bankTransaction.description.notBlank}")
+	@Size(min = 1, max = 200, message = "{bankTransaction.description.size}")
+	private String description;
 	
 	@NotNull(message = "{bankTransaction.transactionType.notNull}")
 	@NotBlank(message = "{bankTransaction.transactionType.notBlank}")

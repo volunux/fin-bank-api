@@ -12,7 +12,7 @@ public class BankAccountLockedException extends FintestException {
 	
 	@Override
 	public String getMessage() {
-		return String.format("%s with an id %s is inactive or disabled.", ENTITY_NAME, entityId.toString());
+		return String.format("%s with an id %s is inactive or disabled and cannot perform transactions.", ENTITY_NAME, entityId.toString());
 	}
 
 }

@@ -5,7 +5,7 @@ import com.fintest.testifi.domain.other.BankTransactionType;
 
 public class TransactionTypeService {
 
-	public void performTransaction(BankAccount bankAccount, BankTransactionType bankTransactionType, Double amount) {
+	public void performTransaction(BankAccount bankAccount, BankTransactionType bankTransactionType, Double amount, BankAccount otherAccount) {
 		
 		switch (bankTransactionType) {
 			case BANK_FEE:
@@ -22,6 +22,10 @@ public class TransactionTypeService {
 			
 			case DEPOSIT:
 				performDeposit(bankAccount, amount);
+			break;
+			
+			case TRANSFER:
+				performTransfer(bankAccount, otherAccount, amount);
 			break;
 			
 			default:
@@ -52,6 +56,13 @@ public class TransactionTypeService {
 	private void performBankFee(BankAccount bankAccount, Double amount) {
 		double finalBalance = bankAccount.getBalance() - amount;
 		bankAccount.setBalance(finalBalance);
+	}
+	
+	private void performTransfer(BankAccount senderAccount, BankAccount recipientAccount, Double amount) {
+		double finalSenderAccountBalance = senderAccount.getBalance() - amount;
+		double finalRecipientAccountBalance = recipientAccount.getBalance() + amount;
+		senderAccount.setBalance(finalSenderAccountBalance);
+		recipientAccount.setBalance(finalRecipientAccountBalance);
 	}
 	
 }

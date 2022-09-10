@@ -9,7 +9,7 @@ public enum BankAccountType {
 
 	SAVING("saving"),
 	CURRENT("current"),
-	CHEQUE("cheque");
+	CHECKING("checking");
 	
 	private String accountType;
 	

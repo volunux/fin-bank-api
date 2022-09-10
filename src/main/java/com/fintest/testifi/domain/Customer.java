@@ -35,7 +35,7 @@ import lombok.ToString;
 		  generator = ObjectIdGenerators.PropertyGenerator.class, 
 		  property = "id")
 @Entity
-@Table(name = "customer")
+@Table(name = "bank_customer")
 public class Customer {
 	
 	@Id

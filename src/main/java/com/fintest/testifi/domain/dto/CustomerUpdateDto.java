@@ -34,9 +34,6 @@ public class CustomerUpdateDto {
 	@Pattern(regexp = "^\\+234[0-9]{10}", message ="{customer.phoneNumber.pattern}")
 	private String phoneNumber;
 
-	@Size(min = 1, max = 200, message = "{customer.contactAddress.size}")
-	private String contactAddress;
-
 	@Size(min = 1, max = 200, message = "{customer.homeAddress.size}")
 	private String homeAddress;
 	

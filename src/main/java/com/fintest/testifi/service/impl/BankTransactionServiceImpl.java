@@ -2,7 +2,6 @@ package com.fintest.testifi.service.impl;
 
 import javax.transaction.Transactional;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -16,7 +15,9 @@ import com.fintest.testifi.domain.exception.BankAccountNotFoundException;
 import com.fintest.testifi.domain.exception.BankAccountPinException;
 import com.fintest.testifi.domain.exception.InsufficientBankAccountBalanceException;
 import com.fintest.testifi.domain.other.BankAccountStatus;
+import com.fintest.testifi.domain.other.BankTransactionStatus;
 import com.fintest.testifi.domain.other.BankTransactionType;
+import com.fintest.testifi.repository.BankAccountRepository;
 import com.fintest.testifi.repository.BankTransactionRepository;
 import com.fintest.testifi.repository.jpa.BankAccountJpaRepository;
 import com.fintest.testifi.service.BankTransactionService;
@@ -27,10 +28,9 @@ import com.fintest.testifi.util.TransactionTypeService;
 public class BankTransactionServiceImpl implements BankTransactionService {
 	
 	private BankTransactionRepository repository;
+	private BankAccountRepository bankAccountRepository;
 	private BankAccountJpaRepository bankAccountJpaRepository;
 	
-	@Autowired
-	private ModelMapper modelMapper;
 	
 	@Autowired
 	private PasswordEncoder passwordEncoder;
@@ -38,8 +38,9 @@ public class BankTransactionServiceImpl implements BankTransactionService {
 	@Autowired
 	private TransactionTypeService transactionTypeService; 
 	
-	public BankTransactionServiceImpl(BankTransactionRepository repository, BankAccountJpaRepository bankAccountJpaRepository) {
+	public BankTransactionServiceImpl(BankTransactionRepository repository, BankAccountRepository bankAccountRepository, BankAccountJpaRepository bankAccountJpaRepository) {
 		this.repository = repository;
+		this.bankAccountRepository = bankAccountRepository;
 		this.bankAccountJpaRepository = bankAccountJpaRepository;
 	}
 
@@ -47,6 +48,8 @@ public class BankTransactionServiceImpl implements BankTransactionService {
 	@Transactional
 	public BankTransaction createBankTransaction(BankAccountTransactionDto bankAccountTransactionDto) {
 		BankAccount existingBankAccount = bankAccountJpaRepository.findByAccountNumber(bankAccountTransactionDto.getAccountNumber());
+		BankTransactionType bankTransactionType = FinBankUtil.getBankTransactionType(bankAccountTransactionDto.getTransactionType());
+		BankTransaction bankTransaction = new BankTransaction();
 		
 		if (existingBankAccount == null) {
 			throw new BankAccountNotFoundException(bankAccountTransactionDto.getAccountNumber());
@@ -62,15 +65,20 @@ public class BankTransactionServiceImpl implements BankTransactionService {
 			throw new BankAccountPinException(bankAccountTransactionDto.getAccountNumber(), bankAccountTransactionDto.getAccountPin());		
 		}
 		
+		bankTransaction.setInitiatorBankAccount(existingBankAccount);
+		bankTransaction.setRecipientBankAccount(null);
+		bankTransaction.setAmount(bankAccountTransactionDto.getAmount());
+		bankTransaction.setDescription(bankAccountTransactionDto.getDescription());
+		bankTransaction.setTransactionType(bankTransactionType);
+		
 		if (existingBankAccount.getBalance() < bankAccountTransactionDto.getAmount()) {
+			bankTransaction.setTransactionStatus(BankTransactionStatus.FAILED);
+			repository.createBankTransaction(bankTransaction);
 			throw new InsufficientBankAccountBalanceException(existingBankAccount.getAccountNumber());
 		}
 		
-		BankTransaction bankTransaction = new BankTransaction();
-		bankTransaction = modelMapper.map(bankAccountTransactionDto, BankTransaction.class);
-		
-		BankTransactionType bankTransactionType = FinBankUtil.getBankTransactionType(bankAccountTransactionDto.getTransactionType());
-		transactionTypeService.performTransaction(existingBankAccount, bankTransactionType, bankAccountTransactionDto.getAmount());
+		transactionTypeService.performTransaction(existingBankAccount, bankTransactionType, bankAccountTransactionDto.getAmount(), null);
+		bankTransaction.setTransactionStatus(BankTransactionStatus.SUCCESS);
 		
 		return repository.createBankTransaction(bankTransaction);
 	}
@@ -78,18 +86,51 @@ public class BankTransactionServiceImpl implements BankTransactionService {
 	@Override
 	@Transactional
 	public BankTransaction createBankTransferTransaction(BankAccountTransferDto bankAccountTransferDto) {
-		BankAccount existingBankAccountFrom = bankAccountJpaRepository.findByAccountNumber(bankAccountTransferDto.getAccountNumberFrom());
-		BankAccount existingBankAccountTo = bankAccountJpaRepository.findByAccountNumber(bankAccountTransferDto.getAccountNumberTo());
+		BankAccount initiatorBankAccount = bankAccountJpaRepository.findByAccountNumber(bankAccountTransferDto.getAccountNumberFrom());
+		BankAccount recipientBankAccount = bankAccountJpaRepository.findByAccountNumber(bankAccountTransferDto.getAccountNumberTo());
+		BankTransactionType bankTransactionType = FinBankUtil.getBankTransactionType(bankAccountTransferDto.getTransactionType());
+		BankTransaction bankTransaction = new BankTransaction();
 
-		if (existingBankAccountFrom == null) {
+		if (initiatorBankAccount == null) {
 			throw new BankAccountNotFoundException(bankAccountTransferDto.getAccountNumberFrom());
 		}
-		else if (existingBankAccountTo == null) {
+		
+		if (initiatorBankAccount.getAccountStatus() != BankAccountStatus.ACTIVE) {
+			throw new BankAccountLockedException(initiatorBankAccount.getAccountNumber());
+		}
+		
+		else if (recipientBankAccount == null) {
 			throw new BankAccountNotFoundException(bankAccountTransferDto.getAccountNumberTo());
 		}
 		
-		BankTransaction bankTransaction = new BankTransaction();
-		bankTransaction = modelMapper.map(bankAccountTransferDto, BankTransaction.class);
+		boolean accountPinValid = passwordEncoder.matches(bankAccountTransferDto.getAccountPin().toString(), initiatorBankAccount.getAccountPin());
+		
+		if (!accountPinValid) {
+			throw new BankAccountPinException(bankAccountTransferDto.getAccountNumberFrom(), bankAccountTransferDto.getAccountPin());		
+		}
+		
+		bankTransaction.setInitiatorBankAccount(initiatorBankAccount);
+		bankTransaction.setRecipientBankAccount(recipientBankAccount);
+		bankTransaction.setAmount(bankAccountTransferDto.getAmount());
+		bankTransaction.setDescription(bankAccountTransferDto.getDescription());
+		bankTransaction.setTransactionType(bankTransactionType);
+		
+		if (initiatorBankAccount.getBalance() < bankAccountTransferDto.getAmount()) {
+			bankTransaction.setTransactionStatus(BankTransactionStatus.FAILED);
+			repository.createBankTransaction(bankTransaction);
+			throw new InsufficientBankAccountBalanceException(initiatorBankAccount.getAccountNumber());
+		}
+		
+		transactionTypeService.performTransaction(initiatorBankAccount, bankTransactionType, bankAccountTransferDto.getAmount(), recipientBankAccount);
+		bankAccountRepository.update(initiatorBankAccount);
+		bankAccountRepository.update(recipientBankAccount);
+
+		bankTransaction.setInitiatorBankAccount(initiatorBankAccount);
+		bankTransaction.setRecipientBankAccount(recipientBankAccount);
+		bankTransaction.setAmount(bankAccountTransferDto.getAmount());
+		bankTransaction.setDescription(bankAccountTransferDto.getDescription());
+		bankTransaction.setTransactionStatus(BankTransactionStatus.SUCCESS);
+		bankTransaction.setTransactionType(bankTransactionType);
 		return repository.createBankTransaction(bankTransaction);
 	}
 }

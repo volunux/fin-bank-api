@@ -36,8 +36,8 @@ public class FinBankUtil {
 			case "current":
 				return BankAccountType.CURRENT;
 			
-			case "cheque":
-				return BankAccountType.CHEQUE;
+			case "checking":
+				return BankAccountType.CHECKING;
 			
 			default:
 				return BankAccountType.SAVING;

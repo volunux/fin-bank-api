@@ -47,11 +47,6 @@ public class CustomerDto {
 	@Pattern(regexp = "^\\+234[0-9]{10}", message ="{customer.phoneNumber.pattern}")
 	private String phoneNumber;
 
-	@NotNull(message = "{customer.contactAddress.notNull}")
-	@NotBlank(message = "{customer.contactAddress.notBlank}")
-	@Size(min = 1, max = 200, message = "{customer.contactAddress.size}")
-	private String contactAddress;
-
 	@NotNull(message = "{customer.homeAddress.notNull}")
 	@NotBlank(message = "{customer.homeAddress.notBlank}")
 	@Size(min = 1, max = 200, message = "{customer.homeAddress.size}")
