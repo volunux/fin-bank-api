@@ -6,7 +6,6 @@ create table if not exists customer (
 	full_name VARCHAR(35) NOT NULL,
 	phone_number VARCHAR(15) NOT NULL,
 	email_address VARCHAR(50) NOT NULL,
-	contact_address VARCHAR(200) NOT NULL,
 	home_address VARCHAR(200) NOT NULL,
 	date_of_birth DATE NOT NULL DEFAULT CURRENT_DATE,
 	created_on TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,

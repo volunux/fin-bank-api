@@ -1,5 +1,6 @@
 package com.fintest.testifi.domain.dto;
 
+import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -31,11 +32,11 @@ public class BankAccountDto {
 		
 	@NotNull(message = "{bankAccount.initialDeposit.notNull}")
 	@Min(value = 100, message = "{bankAccount.initialDeposit.min}")
-	private Long initialDeposit;
+	private Double initialDeposit;
 	
 	@NotNull(message = "{bankAccount.pin.notNull}")
 	@Min(value = 999, message = "{bankAccount.pin.min}")
-	@Min(value = 9999, message = "{bankAccount.pin.min}")
+	@Max(value = 9999, message = "{bankAccount.pin.max}")
 	private Long accountPin;
 
 }

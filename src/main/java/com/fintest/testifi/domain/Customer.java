@@ -11,6 +11,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -35,7 +36,9 @@ import lombok.ToString;
 		  generator = ObjectIdGenerators.PropertyGenerator.class, 
 		  property = "id")
 @Entity
-@Table(name = "bank_customer")
+@Table(name = "bank_customer", indexes = {
+		@Index(columnList = "email_address", name ="email_address_idx", unique = true)
+})
 public class Customer {
 	
 	@Id
@@ -43,17 +46,14 @@ public class Customer {
 	private Long id;
 
 	@Column(nullable = false, name = "full_name")
-	private String fullName;	
+	private String fullName;
 	
-	@Column(nullable = false, unique = true, updatable = false, name = "email_address")
-	private String emailAddress;	
-		
+	@Column(nullable = false, updatable = true, name = "email_address")
+	private String emailAddress;
+
 	@Column(nullable = false, unique = true, name = "phone_number")
 	private String phoneNumber;
-	
-	@Column(nullable = false, name = "contact_address")
-	private String contactAddress;
-	
+		
 	@Column(nullable = false, name = "home_address")
 	private String homeAddress;
 	

@@ -43,11 +43,11 @@ public class BankTransaction {
 	
 	@JoinColumn(name = "initiator_account", nullable = true, updatable = false)
 	@ManyToOne
-	private BankAccount initiatorBankAccount;
+	private BankAccount initiatorAccount;
 	
 	@JoinColumn(name = "recipient_account", nullable = true, updatable = false)
 	@ManyToOne
-	private BankAccount recipientBankAccount;
+	private BankAccount recipientAccount;
 	
 	@Column(nullable = true, name = "description", updatable = false)
 	private String description;

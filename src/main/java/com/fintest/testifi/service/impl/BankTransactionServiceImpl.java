@@ -31,7 +31,6 @@ public class BankTransactionServiceImpl implements BankTransactionService {
 	private BankAccountRepository bankAccountRepository;
 	private BankAccountJpaRepository bankAccountJpaRepository;
 	
-	
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 	
@@ -65,8 +64,8 @@ public class BankTransactionServiceImpl implements BankTransactionService {
 			throw new BankAccountPinException(bankAccountTransactionDto.getAccountNumber(), bankAccountTransactionDto.getAccountPin());		
 		}
 		
-		bankTransaction.setInitiatorBankAccount(existingBankAccount);
-		bankTransaction.setRecipientBankAccount(null);
+		bankTransaction.setInitiatorAccount(existingBankAccount);
+		bankTransaction.setRecipientAccount(null);
 		bankTransaction.setAmount(bankAccountTransactionDto.getAmount());
 		bankTransaction.setDescription(bankAccountTransactionDto.getDescription());
 		bankTransaction.setTransactionType(bankTransactionType);
@@ -78,8 +77,8 @@ public class BankTransactionServiceImpl implements BankTransactionService {
 		}
 		
 		transactionTypeService.performTransaction(existingBankAccount, bankTransactionType, bankAccountTransactionDto.getAmount(), null);
+		bankAccountRepository.update(existingBankAccount);
 		bankTransaction.setTransactionStatus(BankTransactionStatus.SUCCESS);
-		
 		return repository.createBankTransaction(bankTransaction);
 	}
 	
@@ -94,13 +93,15 @@ public class BankTransactionServiceImpl implements BankTransactionService {
 		if (initiatorBankAccount == null) {
 			throw new BankAccountNotFoundException(bankAccountTransferDto.getAccountNumberFrom());
 		}
+		else if (recipientBankAccount == null) {
+			throw new BankAccountNotFoundException(bankAccountTransferDto.getAccountNumberTo());
+		}
 		
 		if (initiatorBankAccount.getAccountStatus() != BankAccountStatus.ACTIVE) {
 			throw new BankAccountLockedException(initiatorBankAccount.getAccountNumber());
 		}
-		
-		else if (recipientBankAccount == null) {
-			throw new BankAccountNotFoundException(bankAccountTransferDto.getAccountNumberTo());
+		else if (recipientBankAccount.getAccountStatus() != BankAccountStatus.ACTIVE) {
+			throw new BankAccountLockedException(initiatorBankAccount.getAccountNumber());
 		}
 		
 		boolean accountPinValid = passwordEncoder.matches(bankAccountTransferDto.getAccountPin().toString(), initiatorBankAccount.getAccountPin());
@@ -109,8 +110,8 @@ public class BankTransactionServiceImpl implements BankTransactionService {
 			throw new BankAccountPinException(bankAccountTransferDto.getAccountNumberFrom(), bankAccountTransferDto.getAccountPin());		
 		}
 		
-		bankTransaction.setInitiatorBankAccount(initiatorBankAccount);
-		bankTransaction.setRecipientBankAccount(recipientBankAccount);
+		bankTransaction.setInitiatorAccount(initiatorBankAccount);
+		bankTransaction.setRecipientAccount(recipientBankAccount);
 		bankTransaction.setAmount(bankAccountTransferDto.getAmount());
 		bankTransaction.setDescription(bankAccountTransferDto.getDescription());
 		bankTransaction.setTransactionType(bankTransactionType);
@@ -124,13 +125,7 @@ public class BankTransactionServiceImpl implements BankTransactionService {
 		transactionTypeService.performTransaction(initiatorBankAccount, bankTransactionType, bankAccountTransferDto.getAmount(), recipientBankAccount);
 		bankAccountRepository.update(initiatorBankAccount);
 		bankAccountRepository.update(recipientBankAccount);
-
-		bankTransaction.setInitiatorBankAccount(initiatorBankAccount);
-		bankTransaction.setRecipientBankAccount(recipientBankAccount);
-		bankTransaction.setAmount(bankAccountTransferDto.getAmount());
-		bankTransaction.setDescription(bankAccountTransferDto.getDescription());
 		bankTransaction.setTransactionStatus(BankTransactionStatus.SUCCESS);
-		bankTransaction.setTransactionType(bankTransactionType);
 		return repository.createBankTransaction(bankTransaction);
 	}
 }

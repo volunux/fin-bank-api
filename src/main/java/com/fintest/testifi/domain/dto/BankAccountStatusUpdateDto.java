@@ -29,7 +29,7 @@ public class BankAccountStatusUpdateDto {
 	@Min(value = 999, message = "{bankAccount.pin.min}")
 	@Max(value = 9999, message = "{bankAccount.pin.min}")
 	private Long accountPin;
-	
+
 	@NotNull(message = "{bankAccount.status.notNull}")
 	@NotBlank(message = "{bankAccount.status.notBlank}")
 	@BankAccountStatusValidator(enumClass = BankAccountStatus.class, message = "{bankAccount.status.enum}")

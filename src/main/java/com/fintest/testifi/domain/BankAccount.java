@@ -43,7 +43,7 @@ import lombok.Setter;
 		  property = "id")
 @Entity
 @Table(name = "bank_account" , indexes = {
-		@Index(columnList = "account_pin", name ="transaction_pin_idx", unique = true)
+		@Index(columnList = "account_number", name ="account_number_idx", unique = true)
 })
 public class BankAccount {
 	
@@ -53,6 +53,17 @@ public class BankAccount {
 	
 	@Column(nullable = false, name = "account_number", updatable = false)
 	private String accountNumber;
+	
+	@Column(nullable = false, name = "account_type")
+	@Enumerated(value = EnumType.STRING)
+	private BankAccountType accountType;
+
+	@Column(nullable = false, name = "account_status")
+	@Enumerated(value = EnumType.STRING)
+	private BankAccountStatus accountStatus;
+	
+	@Column(nullable = false, name ="account_pin")
+	private String accountPin;
 
 	@Column(nullable = false, name = "balance")
 	private Double balance;
@@ -79,19 +90,8 @@ public class BankAccount {
 	@EqualsAndHashCode.Exclude
 	private Customer customer;
 	
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "bankAccount", cascade = CascadeType.ALL)
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "initiatorAccount", cascade = CascadeType.ALL)
 	private Set<BankTransaction> bankTransactions = new HashSet<BankTransaction>();
-	
-	@Column(nullable = false, name = "account_type")
-	@Enumerated(value = EnumType.STRING)
-	private BankAccountType accountType;
-
-	@Column(nullable = false, name = "account_status")
-	@Enumerated(value = EnumType.STRING)
-	private BankAccountStatus accountStatus;
-	
-	@Column(nullable = false, name ="account_pin")
-	private String accountPin;
 	
 	@PrePersist
 	public void createAccountNumber() {

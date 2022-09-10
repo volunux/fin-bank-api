@@ -59,9 +59,10 @@ public class CustomerDto {
 	@BankAccountMinimumAgeValidator(age = 18, message = "{customer.dateOfBirth.minimumAge}")
 	private Date dateOfBirth;
 
-	@Min(value = 0, message = "{bankAccount.initialDeposit.min}")
+	@NotNull(message = "{bankAccount.initialDeposit.notNull}")
+	@Min(value = 100, message = "{bankAccount.initialDeposit.min}")
 	private Double initialDeposit;
-	
+
 	@NotNull(message = "{bankAccount.type.notNull}")
 	@NotBlank(message = "{bankAccount.type.notBlank}")
 	@BankAccountTypeValidator(enumClass = BankAccountType.class, message = "{bankAccount.type.enum}")
@@ -69,7 +70,7 @@ public class CustomerDto {
 	
 	@NotNull(message = "{bankAccount.pin.notNull}")
 	@Min(value = 999, message = "{bankAccount.pin.min}")
-	@Max(value = 9999, message = "{bankAccount.pin.min}")
+	@Max(value = 9999, message = "{bankAccount.pin.max}")
 	private Long accountPin;
 
 }

@@ -13,7 +13,6 @@ import com.fintest.testifi.domain.BankAccount;
 import com.fintest.testifi.domain.dto.BankAccountDto;
 import com.fintest.testifi.domain.dto.BankAccountPinUpdateDto;
 import com.fintest.testifi.domain.dto.BankAccountStatusUpdateDto;
-import com.fintest.testifi.domain.dto.BankAccountUpdateDto;
 import com.fintest.testifi.domain.dto.DeleteManyBankAccountDto;
 import com.fintest.testifi.domain.exception.BankAccountLockedException;
 import com.fintest.testifi.domain.exception.BankAccountNotFoundException;
@@ -77,7 +76,7 @@ public class BankAccountServiceImpl implements BankAccountService {
 	
 	@Override
 	@Transactional
-	public BankAccount updateBankAccount(Long id, BankAccountUpdateDto bankAccountUpdateDto) {
+	public BankAccount updateBankAccount(Long id, Object bankAccountUpdateDto) {
 		BankAccount existingBankAccount = repository.findOne(id);
 		if (existingBankAccount == null) {
 			throw new BankAccountNotFoundException(id);

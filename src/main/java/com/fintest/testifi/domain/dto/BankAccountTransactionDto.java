@@ -1,5 +1,6 @@
 package com.fintest.testifi.domain.dto;
 
+import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -26,7 +27,7 @@ public class BankAccountTransactionDto {
 	
 	@NotNull(message = "{bankAccount.pin.notNull}")
 	@Min(value = 999, message = "{bankAccount.pin.min}")
-	@Min(value = 9999, message = "{bankAccount.pin.min}")
+	@Max(value = 9999, message = "{bankAccount.pin.max}")
 	private Long accountPin;
 	
 	@NotNull(message = "{bankTransaction.amount.notNull}")
@@ -38,9 +39,9 @@ public class BankAccountTransactionDto {
 	@Size(min = 1, max = 200, message = "{bankTransaction.description.size}")
 	private String description;
 	
-	@NotNull(message = "{bankTransaction.transactionType.notNull}")
-	@NotBlank(message = "{bankTransaction.transactionType.notBlank}")
-	@BankAccountTransactionTypeValidator(enumClass = BankTransactionType.class, message = "{bankAccount.type.enum}")
+	@NotNull(message = "{bankTransaction.type.notNull}")
+	@NotBlank(message = "{bankTransaction.type.notBlank}")
+	@BankAccountTransactionTypeValidator(enumClass = BankTransactionType.class, message = "{bankTransaction.type.enum}")
 	private String transactionType;
 
 }
