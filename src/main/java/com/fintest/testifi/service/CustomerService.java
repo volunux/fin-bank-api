@@ -9,7 +9,7 @@ import com.fintest.testifi.domain.dto.DeleteManyCustomerDto;
 
 public interface CustomerService {
 	
-	List<Customer> findAllCustomer(String emailAddress);
+	List<Customer> findAllCustomer(String emailAddress, Integer pageOffset);
 	
 	Customer findCustomer(Long id);
 	

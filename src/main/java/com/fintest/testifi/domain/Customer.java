@@ -20,8 +20,8 @@ import javax.persistence.TemporalType;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -30,11 +30,8 @@ import lombok.ToString;
 
 @Getter
 @Setter
-@EqualsAndHashCode
+@EqualsAndHashCode(exclude = {"bankAccounts"})
 @ToString
-@JsonIdentityInfo(
-		  generator = ObjectIdGenerators.PropertyGenerator.class, 
-		  property = "id")
 @Entity
 @Table(name = "bank_customer", indexes = {
 		@Index(columnList = "email_address", name ="email_address_idx", unique = true)
@@ -72,5 +69,7 @@ public class Customer {
 	private Date updatedOn;
 	
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "customer", fetch = FetchType.EAGER)
+	@JsonIgnoreProperties(value = {"customer"}, allowSetters = true)
+	@JsonManagedReference
 	private Set<BankAccount> bankAccounts = new HashSet<BankAccount>();
 }

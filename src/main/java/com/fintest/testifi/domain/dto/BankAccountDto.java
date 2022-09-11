@@ -23,7 +23,7 @@ public class BankAccountDto {
 	@NotNull(message = "{bankAccount.accountNumber.notNull}")
 	@NotBlank(message = "{bankAccount.accountNumber.notBlank}")
 	@Size(min = 1, max = 12, message = "{bankAccount.accountNumber.size}")
-	private String accountNumber;
+	private String existingAccountNumber;
 	
 	@NotNull(message = "{bankAccount.type.notNull}")
 	@NotBlank(message = "{bankAccount.type.notBlank}")
@@ -37,6 +37,11 @@ public class BankAccountDto {
 	@NotNull(message = "{bankAccount.pin.notNull}")
 	@Min(value = 999, message = "{bankAccount.pin.min}")
 	@Max(value = 9999, message = "{bankAccount.pin.max}")
-	private Long accountPin;
+	private Long existingAccountPin;
+	
+	@NotNull(message = "{bankAccount.pin.notNull}")
+	@Min(value = 999, message = "{bankAccount.pin.min}")
+	@Max(value = 9999, message = "{bankAccount.pin.max}")
+	private Long newAccountPin;
 
 }

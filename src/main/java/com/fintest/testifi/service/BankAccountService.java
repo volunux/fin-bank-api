@@ -27,4 +27,6 @@ public interface BankAccountService {
 	boolean deleteManyBankAccount(DeleteManyBankAccountDto customerDto);
 	
 	boolean deleteAllBankAccount();
+
+	BankAccount findBankAccountByAccountNumber(String accountNumber);
 }

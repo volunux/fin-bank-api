@@ -22,7 +22,7 @@ spring:
         format_sql: true
         dialect: org.hibernate.dialect.PostgreSQL9Dialect
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
 
   autoconfigure:
     exclude[0]: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
@@ -38,3 +38,15 @@ logging:
             sql: trace
 
 api-base-path: /api/v1
+
+mail:
+  host: smtp.gmail.com
+  port: 587
+  username: volunux@gmail.com
+  password: password
+  protocol: smtp
+  auth: true
+  tls: true
+  debug: true
+
+ 

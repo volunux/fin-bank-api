@@ -22,15 +22,19 @@ public class CustomerRepositoryImpl implements CustomerRepository {
 	private EntityManager entityManager;
 
 	@Override
-	public List<Customer> findAll(String emailAddress) {
-    	String queryText = "select c from Customer c";
+	public List<Customer> findAll(String emailAddress, Integer pageOffset) {
+		String queryText = "select c from Customer c order by c.updatedOn desc";    	
     	TypedQuery<Customer> customerQuery = entityManager.createQuery(queryText, Customer.class);
 
-    	if (emailAddress != null ) {
-    		queryText = "select c from Customer c where c.emailAddress = :emailAddress";
+    	if (emailAddress != null) {
+       		queryText = "select c from Customer c where c.emailAddress = :emailAddress order by c.updatedOn desc";
+    		customerQuery = entityManager.createQuery(queryText, Customer.class);
     		customerQuery.setParameter("emailAddress", emailAddress);
     	}
-    	
+		
+    	int pageSize = 11;
+    	customerQuery.setFirstResult((pageOffset - 1) * pageSize);
+    	customerQuery.setMaxResults(pageSize);
     	return customerQuery.getResultList();
 	}
 	

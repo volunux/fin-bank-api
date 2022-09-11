@@ -17,7 +17,7 @@ public enum BankTransactionType {
 	private String accountTransactionType;
 	
 	BankTransactionType(String accountTransactionType) {
-		
+		this.accountTransactionType = accountTransactionType;
 	}
 	
 	@JsonValue

@@ -6,7 +6,7 @@ import com.fintest.testifi.domain.Customer;
 
 public interface CustomerRepository {
 	
-	List<Customer> findAll(String emailAddress);
+	List<Customer> findAll(String emailAddress, Integer pageOffset);
 	
 	Customer findOne(Long id);
 	

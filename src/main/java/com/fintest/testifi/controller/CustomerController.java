@@ -24,7 +24,7 @@ import com.fintest.testifi.service.CustomerService;
 
 @RestController
 @RequestMapping(value ="customer" ,
-				consumes = { MediaType.APPLICATION_JSON_VALUE } ,
+					consumes = { MediaType.APPLICATION_JSON_VALUE } ,
 					produces = { MediaType.APPLICATION_JSON_VALUE })
 public class CustomerController {
 
@@ -35,11 +35,12 @@ public class CustomerController {
 	}	
 	
 	@GetMapping
-	public List<Customer> findCustomers(@RequestParam(required = false) String emailAddress) {
-		return service.findAllCustomer(emailAddress);
+	public List<Customer> findCustomers(@RequestParam(required = false, name ="emailAddress") String emailAddress,
+										@RequestParam(required = false, defaultValue = "1" , name = "page") Integer pageNumber) {
+		return service.findAllCustomer(emailAddress, pageNumber);
 	}
 	
-	@GetMapping("/detail/{id}")
+	@GetMapping({"{id}", "/detail/{id}"})
 	public Customer findCustomer(@PathVariable Long id) {
 		return service.findCustomer(id);
 	}

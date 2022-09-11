@@ -6,6 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -18,6 +19,7 @@ import javax.persistence.TemporalType;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fintest.testifi.domain.other.BankTransactionStatus;
 import com.fintest.testifi.domain.other.BankTransactionType;
 
@@ -28,8 +30,8 @@ import lombok.ToString;
 
 @Getter
 @Setter
-@EqualsAndHashCode
-@ToString
+@EqualsAndHashCode(exclude = {"initiatorAccount", "recipientAccount"})
+@ToString(exclude = {"initiatorAccount", "recipientAccount"})
 @Entity
 @Table(name = "bank_transaction")
 public class BankTransaction {
@@ -42,11 +44,13 @@ public class BankTransaction {
 	private Double amount;
 	
 	@JoinColumn(name = "initiator_account", nullable = true, updatable = false)
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JsonIgnoreProperties(value = {"bankTransactions", "customer"}, allowSetters = true)
 	private BankAccount initiatorAccount;
 	
 	@JoinColumn(name = "recipient_account", nullable = true, updatable = false)
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JsonIgnoreProperties(value = {"bankTransactions", "customer"}, allowSetters = true)
 	private BankAccount recipientAccount;
 	
 	@Column(nullable = true, name = "description", updatable = false)

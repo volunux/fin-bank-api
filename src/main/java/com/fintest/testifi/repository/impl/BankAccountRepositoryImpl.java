@@ -12,6 +12,7 @@ import javax.persistence.TypedQuery;
 import org.springframework.stereotype.Repository;
 
 import com.fintest.testifi.domain.BankAccount;
+import com.fintest.testifi.domain.Customer;
 import com.fintest.testifi.domain.exception.BankAccountDuplicateEntityException;
 import com.fintest.testifi.domain.other.BankAccountStatus;
 import com.fintest.testifi.repository.BankAccountRepository;
@@ -23,13 +24,14 @@ public class BankAccountRepositoryImpl implements BankAccountRepository {
 	private EntityManager entityManager;
 
 	@Override
-	public List<BankAccount> findAll(Long customerId) {
+	public List<BankAccount> findAll(Customer customer) {
     	String queryText = "select ba from BankAccount ba";
     	TypedQuery<BankAccount> bankAccountQuery = entityManager.createQuery(queryText, BankAccount.class);
 
-    	if (customerId != null ) {
+    	if (customer != null ) {
     		queryText = "select ba from BankAccount ba where ba.customer = :customer";
-    		bankAccountQuery.setParameter("customer", customerId);
+    		bankAccountQuery = entityManager.createQuery(queryText, BankAccount.class);
+    		bankAccountQuery.setParameter("customer", customer);
     	}
     	
     	return bankAccountQuery.getResultList();

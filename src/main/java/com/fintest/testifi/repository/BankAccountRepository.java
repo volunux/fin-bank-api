@@ -3,11 +3,12 @@ package com.fintest.testifi.repository;
 import java.util.List;
 
 import com.fintest.testifi.domain.BankAccount;
+import com.fintest.testifi.domain.Customer;
 import com.fintest.testifi.domain.other.BankAccountStatus;
 
 public interface BankAccountRepository {
 
-	List<BankAccount> findAll(Long customerId);
+	List<BankAccount> findAll(Customer customer);
 	
 	BankAccount findOne(Long id);
 	

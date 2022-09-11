@@ -37,11 +37,11 @@ public class BankAccountController {
 		return service.findAllBankAccount(customerId);
 	}
 	
-	@GetMapping("/detail/{id}")
+	@GetMapping({"{id}", "/detail/{id}"})
 	public BankAccount findBankAccount(@PathVariable Long id) {
 		return service.findBankAccount(id);
 	}
-	
+		
 	@PostMapping({"" , "/save"})
 	public BankAccount saveBankAccount(@Valid @RequestBody BankAccountDto bankAccountDto) {
 		return service.createBankAccount(bankAccountDto);

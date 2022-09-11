@@ -1,8 +1,11 @@
 package com.fintest.testifi.util;
 
+import org.springframework.stereotype.Component;
+
 import com.fintest.testifi.domain.BankAccount;
 import com.fintest.testifi.domain.other.BankTransactionType;
 
+@Component
 public class TransactionTypeService {
 
 	public void performTransaction(BankAccount bankAccount, BankTransactionType bankTransactionType, Double amount, BankAccount otherAccount) {

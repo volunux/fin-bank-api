@@ -17,7 +17,6 @@ import com.fintest.testifi.domain.dto.DeleteManyCustomerDto;
 import com.fintest.testifi.domain.exception.CustomerNotFoundException;
 import com.fintest.testifi.domain.other.BankAccountStatus;
 import com.fintest.testifi.repository.CustomerRepository;
-import com.fintest.testifi.service.BankAccountService;
 import com.fintest.testifi.service.CustomerService;
 import com.fintest.testifi.util.FinBankUtil;
 
@@ -25,7 +24,6 @@ import com.fintest.testifi.util.FinBankUtil;
 public class CustomerServiceImpl implements CustomerService {
 	
 	private CustomerRepository repository;
-	private BankAccountService bankAccountService;
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
@@ -33,25 +31,22 @@ public class CustomerServiceImpl implements CustomerService {
 	@Autowired
 	private ModelMapper modelMapper;
 		
-	public CustomerServiceImpl(CustomerRepository repository, BankAccountService bankAccountService) {
+	public CustomerServiceImpl(CustomerRepository repository) {
 		this.repository = repository;
-		this.bankAccountService = bankAccountService;
 	}
 	
 	@Override
-	public List<Customer> findAllCustomer(String emailAddress) {
-		return repository.findAll(emailAddress);
+	public List<Customer> findAllCustomer(String emailAddress, Integer pageOffset) {
+		return repository.findAll(emailAddress, pageOffset);
 	}
 	
 	@Override
 	public Customer findCustomer(Long id) {
 		Customer customer = repository.findOne(id);
-		if (customer != null) {
-			return customer;
-		}
-		else {
+		if (customer == null) {
 			throw new CustomerNotFoundException(id);
 		}
+		return customer;
 	}
 	
 	@Override
@@ -68,7 +63,7 @@ public class CustomerServiceImpl implements CustomerService {
 		bankAccount.setAccountStatus(BankAccountStatus.ACTIVE);
 		
 		String accountPinHash = passwordEncoder.encode(String.valueOf(customerDto.getAccountPin()));
-		bankAccount.setAccountPin(accountPinHash);;
+		bankAccount.setAccountPin(accountPinHash);
 		
 		customer.getBankAccounts().add(bankAccount);
 		customer = repository.save(customer);

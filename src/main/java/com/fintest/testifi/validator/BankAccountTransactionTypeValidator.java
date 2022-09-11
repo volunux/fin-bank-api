@@ -8,11 +8,11 @@ import java.lang.annotation.Target;
 import javax.validation.Constraint;
 import javax.validation.Payload;
 
-import com.fintest.testifi.validator.impl.BankAccountStatusValidatorImpl;
+import com.fintest.testifi.validator.impl.BankAccountTransactionTypeValidatorImpl;
 
 @Target({ ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER })
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = BankAccountStatusValidatorImpl.class)
+@Constraint(validatedBy = BankAccountTransactionTypeValidatorImpl.class)
 public @interface BankAccountTransactionTypeValidator {
 
 	Class<? extends Enum<?>> enumClass();

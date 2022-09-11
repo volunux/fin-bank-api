@@ -1,7 +1,4 @@
-drop table if exists customer cascade;
-drop table if exists bank_account cascade;
-
-create table if not exists customer (
+create table if not exists bank_customer (
 	id bigserial NOT NULL,
 	full_name VARCHAR(35) NOT NULL,
 	phone_number VARCHAR(15) NOT NULL,
@@ -13,10 +10,7 @@ create table if not exists customer (
 	primary key (id)
 );
 
-alter table customer
-	add constraint uqk_email_address unique (email_address);
-	
-create table bank_account (
+create table if not exists bank_account (
     id bigserial NOT NULL,
     account_number VARCHAR(255) NOT NULL,
     account_pin VARCHAR(255) NOT NULL,

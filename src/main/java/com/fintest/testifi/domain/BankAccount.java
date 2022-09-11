@@ -1,10 +1,7 @@
 package com.fintest.testifi.domain;
 
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -16,8 +13,6 @@ import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -26,26 +21,32 @@ import javax.persistence.TemporalType;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fintest.testifi.domain.other.BankAccountStatus;
 import com.fintest.testifi.domain.other.BankAccountType;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
-@EqualsAndHashCode
-@JsonIdentityInfo(
-		  generator = ObjectIdGenerators.PropertyGenerator.class, 
-		  property = "id")
+@EqualsAndHashCode(exclude = {"customer"})
+@ToString(exclude = {"customer"})
 @Entity
 @Table(name = "bank_account" , indexes = {
 		@Index(columnList = "account_number", name ="account_number_idx", unique = true)
 })
 public class BankAccount {
+	
+	public BankAccount() {
+		long randomNumber = (long) Math.floor(Math.random() * 9_000_000_000L) + 1_000_000_000L;
+		String preAccountNumber = "FE" + randomNumber;
+		this.accountNumber = preAccountNumber;
+		this.lastTimeAccessed = new Date();
+	}
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -86,20 +87,11 @@ public class BankAccount {
 	private Date updatedOn;
 	
 	@JoinColumn(name = "customer_id", nullable = false)
-	@ManyToOne(fetch = FetchType.EAGER)
-	@EqualsAndHashCode.Exclude
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JsonBackReference
+	@JsonIgnoreProperties(value = {"bankAccounts"}, allowSetters = true)
 	private Customer customer;
-	
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "initiatorAccount", cascade = CascadeType.ALL)
-	private Set<BankTransaction> bankTransactions = new HashSet<BankTransaction>();
-	
-	@PrePersist
-	public void createAccountNumber() {
-		long randomNumber = (long) Math.floor(Math.random() * 9_000_000_000L) + 1_000_000_000L;
-		String preAccountNumber = "FE" + randomNumber;
-		this.accountNumber = preAccountNumber;
-		this.lastTimeAccessed = new Date();
-	}
+		
 	
 	@PreUpdate
 	public void accountUpdate() {

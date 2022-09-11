@@ -76,6 +76,9 @@ public class FinBankUtil {
 			case "bank-fee":
 				return BankTransactionType.BANK_FEE;
 			
+			case "transfer":
+				return BankTransactionType.TRANSFER;
+			
 			default:
 				return BankTransactionType.WITHDRAWAL;
 		}

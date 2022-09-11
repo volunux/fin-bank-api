@@ -10,6 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.fintest.testifi.domain.BankAccount;
+import com.fintest.testifi.domain.Customer;
 import com.fintest.testifi.domain.dto.BankAccountDto;
 import com.fintest.testifi.domain.dto.BankAccountPinUpdateDto;
 import com.fintest.testifi.domain.dto.BankAccountStatusUpdateDto;
@@ -42,35 +43,50 @@ public class BankAccountServiceImpl implements BankAccountService {
 	
 	@Override
 	public List<BankAccount> findAllBankAccount(Long customerId) {
-		return repository.findAll(customerId);
+		Customer customer = new Customer();
+		customer.setId(customerId);
+		return repository.findAll(customer);
 	}
 	
 	@Override
 	public BankAccount findBankAccount(Long id) {
 		BankAccount bankAccount = repository.findOne(id);
-		if (bankAccount != null) {
-			return bankAccount;
-		}
-		else {
+		if (bankAccount == null) {
 			throw new BankAccountNotFoundException(id);
 		}
+		return bankAccount;
 	}
 	
+	@Override
 	public BankAccount findBankAccountByAccountNumber(String accountNumber) {
 		BankAccount bankAccount = jpaRepository.findByAccountNumber(accountNumber);
-		if (bankAccount != null) {
-			return bankAccount;
-		}
-		else {
+		if (bankAccount == null) {
 			throw new BankAccountNotFoundException(accountNumber);
 		}
+		return bankAccount;
 	}
 	
 	@Override
 	@Transactional
 	public BankAccount createBankAccount(BankAccountDto bankAccountDto) {
+		BankAccount existingBankAccount = findBankAccountByAccountNumber(bankAccountDto.getExistingAccountNumber());		
+		boolean accountPinValid = passwordEncoder.matches(bankAccountDto.getExistingAccountPin().toString(), existingBankAccount.getAccountPin());
+		
+		if (!accountPinValid) {
+			throw new BankAccountPinException(bankAccountDto.getExistingAccountNumber(), bankAccountDto.getExistingAccountPin());		
+		}
+		
+		Customer customer = existingBankAccount.getCustomer();
 		BankAccount bankAccount = new BankAccount();
-		bankAccount = modelMapper.map(bankAccountDto, BankAccount.class);
+		bankAccount.setCustomer(customer);
+		bankAccount.setBalance(bankAccountDto.getInitialDeposit());
+		bankAccount.setInterestRate(FinBankUtil.getDefaultInterestRate());
+		bankAccount.setAccountStatus(BankAccountStatus.ACTIVE);
+		bankAccount.setAccountType(FinBankUtil.getBankAccountType(bankAccountDto.getAccountType()));
+		
+		String accountPinHash = passwordEncoder.encode(String.valueOf(bankAccountDto.getNewAccountPin()));
+		bankAccount.setAccountPin(accountPinHash);
+		
 		return repository.save(bankAccount);
 	}
 	

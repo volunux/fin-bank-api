@@ -14,6 +14,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -38,6 +40,9 @@ public class FinBankConfig implements WebMvcConfigurer {
 	
 	@Autowired
 	private DataSource dataSource;
+	
+	@Autowired
+	private FinBankMailConfigProperties mailConfigProps;
 	
 	@Override
 	public void configurePathMatch(PathMatchConfigurer configurer) {
@@ -96,5 +101,23 @@ public class FinBankConfig implements WebMvcConfigurer {
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
+	}
+	
+	@Bean
+	public JavaMailSender getJavaMailSender() {
+		JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
+		mailSender.setHost(mailConfigProps.getHost());
+		mailSender.setPort(mailConfigProps.getPort());
+		
+	    mailSender.setUsername(mailConfigProps.getUsername());
+	    mailSender.setPassword(mailConfigProps.getPassword());
+	    
+	    Properties props = mailSender.getJavaMailProperties();
+	    props.put("mail.transport.protocol", mailConfigProps.getProtocol());
+	    props.put("mail.smtp.auth", mailConfigProps.getAuth());
+	    props.put("mail.smtp.starttls.enable", mailConfigProps.getTls());
+	    props.put("mail.debug", mailConfigProps.getDebug());
+	    
+	    return mailSender;
 	}
 }

@@ -14,9 +14,13 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.fintest.testifi.domain.exception.BankAccountDuplicateEntityException;
+import com.fintest.testifi.domain.exception.BankAccountLockedException;
 import com.fintest.testifi.domain.exception.BankAccountNotFoundException;
+import com.fintest.testifi.domain.exception.BankAccountPinException;
 import com.fintest.testifi.domain.exception.CustomerDuplicateEntityException;
 import com.fintest.testifi.domain.exception.CustomerNotFoundException;
+import com.fintest.testifi.domain.exception.InsufficientBankAccountBalanceException;
+import com.fintest.testifi.domain.exception.InvalidBankTransferTransaction;
 
 @RestControllerAdvice
 public class GlobalExceptionHandlerController {
@@ -51,7 +55,7 @@ public class GlobalExceptionHandlerController {
 	
 	@ResponseStatus(HttpStatus.NOT_FOUND)
 	@ExceptionHandler(CustomerNotFoundException.class)
-	public Object handleDoctorNotFound(CustomerNotFoundException ex) {
+	public Object handleNotFoundEntity(CustomerNotFoundException ex) {
 		Map<String, String> errors = new HashMap<String, String>();
 		errors.put("entityName", CustomerNotFoundException.ENTITY_NAME);
 		errors.put("message", ex.getMessage());
@@ -62,7 +66,7 @@ public class GlobalExceptionHandlerController {
 	
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(CustomerDuplicateEntityException.class)
-	public Object handleDoctorDuplicateEntity(CustomerDuplicateEntityException ex) {
+	public Object handleCustomerDuplicateEntity(CustomerDuplicateEntityException ex) {
 		Map<String, String> errors = new HashMap<String, String>();
 		errors.put("entityName", CustomerDuplicateEntityException.ENTITY_NAME);
 		errors.put("message", ex.getMessage());
@@ -73,7 +77,7 @@ public class GlobalExceptionHandlerController {
 	
 	  @ResponseStatus(HttpStatus.NOT_FOUND)
 	  @ExceptionHandler(BankAccountNotFoundException.class)
-	  public Object handleDoctorNotFound(BankAccountNotFoundException ex) {
+	  public Object handleNotFoundEntity(BankAccountNotFoundException ex) {
 	    Map<String, String> errors = new HashMap<String, String>();
 	    errors.put("entityName", BankAccountNotFoundException.ENTITY_NAME);
 	    errors.put("message", ex.getMessage());
@@ -84,9 +88,53 @@ public class GlobalExceptionHandlerController {
 	  
 	  @ResponseStatus(HttpStatus.BAD_REQUEST)
 	  @ExceptionHandler(BankAccountDuplicateEntityException.class)
-	  public Object handleDoctorDuplicateEntity(BankAccountDuplicateEntityException ex) {
+	  public Object handleDuplicateEntity(BankAccountDuplicateEntityException ex) {
 	    Map<String, String> errors = new HashMap<String, String>();
 	    errors.put("entityName", BankAccountDuplicateEntityException.ENTITY_NAME);
+	    errors.put("message", ex.getMessage());
+	    ex.setCode(HttpStatus.BAD_REQUEST.value());
+	    errors.put("code", ex.getCode().toString());
+	    return errors;
+	  }
+	  
+	  @ResponseStatus(HttpStatus.BAD_REQUEST)
+	  @ExceptionHandler(InsufficientBankAccountBalanceException.class)
+	  public Object handleInsufficientBalance(InsufficientBankAccountBalanceException ex) {
+	    Map<String, String> errors = new HashMap<String, String>();
+	    errors.put("entityName", InsufficientBankAccountBalanceException.ENTITY_NAME);
+	    errors.put("message", ex.getMessage());
+	    ex.setCode(HttpStatus.BAD_REQUEST.value());
+	    errors.put("code", ex.getCode().toString());
+	    return errors;
+	  }
+	  
+	  @ResponseStatus(HttpStatus.BAD_REQUEST)
+	  @ExceptionHandler(BankAccountPinException.class)
+	  public Object handleAccountPin(BankAccountPinException ex) {
+	    Map<String, String> errors = new HashMap<String, String>();
+	    errors.put("entityName", BankAccountPinException.ENTITY_NAME);
+	    errors.put("message", ex.getMessage());
+	    ex.setCode(HttpStatus.BAD_REQUEST.value());
+	    errors.put("code", ex.getCode().toString());
+	    return errors;
+	  }
+	  
+	  @ResponseStatus(HttpStatus.BAD_REQUEST)
+	  @ExceptionHandler(BankAccountLockedException.class)
+	  public Object handleAccountLocked(BankAccountLockedException ex) {
+	    Map<String, String> errors = new HashMap<String, String>();
+	    errors.put("entityName", BankAccountLockedException.ENTITY_NAME);
+	    errors.put("message", ex.getMessage());
+	    ex.setCode(HttpStatus.BAD_REQUEST.value());
+	    errors.put("code", ex.getCode().toString());
+	    return errors;
+	  }
+	  
+	  @ResponseStatus(HttpStatus.BAD_REQUEST)
+	  @ExceptionHandler(InvalidBankTransferTransaction.class)
+	  public Object handleInvalidTransferTransaction(InvalidBankTransferTransaction ex) {
+	    Map<String, String> errors = new HashMap<String, String>();
+	    errors.put("entityName", InvalidBankTransferTransaction.ENTITY_NAME);
 	    errors.put("message", ex.getMessage());
 	    ex.setCode(HttpStatus.BAD_REQUEST.value());
 	    errors.put("code", ex.getCode().toString());

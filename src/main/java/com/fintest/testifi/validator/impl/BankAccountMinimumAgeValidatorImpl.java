@@ -17,6 +17,9 @@ public class BankAccountMinimumAgeValidatorImpl implements ConstraintValidator<B
 	
 	@Override
 	public boolean isValid(Date value, ConstraintValidatorContext context) {
+		if (value == null) {
+			return false;
+		}
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(value);
 		int currentYear = Calendar.getInstance().get(Calendar.YEAR);
