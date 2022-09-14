@@ -2,10 +2,13 @@ server:
   port: 8088
 
 spring:
+  
+  main:    allow-bean-definition-overriding: true
+
   datasource:
-    url: jdbc:postgresql://localhost:5432/fintestifi
-    username: postgres
-    password: 12345
+    url: jdbc:postgresql://ec2-34-203-182-65.compute-1.amazonaws.com:5432/de8j3g4d480d7u
+    username: xdaacltosrlenp
+    password: 9fed02b02064a26274f453a54bd3899c78688f45dd84268918ccf6d1b484ae95
     hikari:
       maximum-pool-size: 10
       auto-commit: true
@@ -26,6 +29,10 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQL9Dialect
     hibernate:
       ddl-auto: update
+      
+#  cloud:#    gcp:#      sql:#        instance-connection-name: xxxxxxxxxxxxxxxxxxxxx
+#        database-name: xxxxxxxxxxxxxxxxx#      project-id: xxxxxxxxxxxxxxxxx
+           
         
 logging:
   level:

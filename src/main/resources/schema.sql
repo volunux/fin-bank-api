@@ -23,4 +23,4 @@ create table if not exists bank_account (
 	updated_on TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
     customer_id int8 NOT NULL,
     primary key (id)
-)
+);

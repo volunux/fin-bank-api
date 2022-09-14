@@ -32,7 +32,7 @@ public class FinBankSecurityConfig {
 	
 	@Bean
 	public WebSecurityCustomizer webSecurityCustomizer() {
-		return (web) -> web.ignoring().antMatchers("/unsecured", "/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**", "/fintest-api/**");
+		return (web) -> web.ignoring().antMatchers("/api/v1/**", "/unsecured", "/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**", "/fintest-api/**");
 	}
 	
 	@Bean
