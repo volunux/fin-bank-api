@@ -23,6 +23,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -40,22 +41,53 @@ public class Customer {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Schema(description = "The unique generated ID of the customer",
+     name = "id",
+     required = false )
 	private Long id;
 
 	@Column(nullable = false, name = "full_name")
+	@Schema(description ="The customer's full name",
+		name = "fullName",
+		required = true,
+		minLength = 1,
+		maxLength = 150,
+	    example = "David Bareth" )
 	private String fullName;
 	
 	@Column(nullable = false, updatable = true, name = "email_address")
+	@Schema(description ="The customer's email address",
+		name = "emailAddress",
+		required = true,
+		minLength = 3,
+		maxLength = 50,
+	    example = "davidbareth@gmail.com" )
 	private String emailAddress;
 
 	@Column(nullable = false, unique = true, name = "phone_number")
+	@Schema(description ="The customer's phone number",
+		name = "phoneNumber",
+		required = true,
+		minLength = 1,
+		maxLength = 15,
+	    example = "+2349022035588" )
 	private String phoneNumber;
 		
 	@Column(nullable = false, name = "home_address")
+	@Schema(description = "The customer's address",
+		name ="homeAddress",
+		required = true,
+		minLength = 1,
+		maxLength = 200,
+		example = "London, United Kingdom")
 	private String homeAddress;
 	
 	@Temporal(TemporalType.DATE)
-	@Column(nullable = false, name = "date_of_birth")
+	@Column(nullable = false, updatable = false, name = "date_of_birth")
+	@Schema(description = "The customer's date of birth",
+		name ="dateOfBirth",
+		required = true,
+		example = "25-07-1998")
 	private Date dateofBirth;
 	
 	@CreationTimestamp
