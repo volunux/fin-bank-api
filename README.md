@@ -20,6 +20,10 @@ The application is configured with Basic Authentication and the username is **us
 
 For basic GET and idempotent request, the http request should include an -H **Accepts:application/json** and for mutable http requests like POST and PUT should include in the header **Content-Type:application/json**
 
+### Http Request Protocol
+
+For the live url and rest api, request usually succeeds with **https://** and for the local development you can use **http://**
+
 ### Objective
 
 Your assignment is to build an internal API for a fake financial institution using Java and Spring.
