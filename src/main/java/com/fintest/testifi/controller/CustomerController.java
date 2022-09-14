@@ -64,7 +64,7 @@ public class CustomerController {
 
 	@Operation(summary = "Retrieve a single customer", description = "Retrieve a single customer with their bank accounts")
 	@ApiResponses(value = {
-	        @ApiResponse(responseCode = "200", description = "Customer single retrieved successfully", 
+	        @ApiResponse(responseCode = "200", description = "Customer retrieved successfully", 
 	        		content = {
 	        				@Content(
 	        						mediaType = "application/json", 

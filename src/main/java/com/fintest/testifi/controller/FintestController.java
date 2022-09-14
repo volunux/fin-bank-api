@@ -10,10 +10,8 @@ import com.fintest.testifi.domain.Fintest;
 
 @RestController
 @RequestMapping(value ="" ,
-				consumes = { MediaType.APPLICATION_JSON_VALUE } ,
 				produces = { MediaType.APPLICATION_JSON_VALUE })
-public class FintestController {
-	
+public class FintestController {	
 
 	@GetMapping
 	public Fintest fintest(@RequestParam(name ="emailAddress", required = false, defaultValue = "david@gmail.com") String emailAddress) {
